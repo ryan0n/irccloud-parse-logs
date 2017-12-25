@@ -24,7 +24,7 @@ class IrcCloudParseLogs
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;
 
-        // Third stage zip file validation
+        // Second stage zip file validation
         if (!file_exists($this->zipFileName)) {
             throw new Exception("File doesn't exist.");
         }
@@ -46,14 +46,14 @@ class IrcCloudParseLogs
 
             // Third stage zip file validation
             if (substr_count($filename, '/') !== 2) {
-                throw new Exception('Unexpected file structure.');
+                throw new Exception('Unexpected zip file structure.');
             }
 
             $fp = $zip->getStream($zip->getNameIndex($i));
 
             // Fourth stage zip file validation
             if (!$fp) {
-                throw new Exception('Unknown error reading zip.');
+                throw new Exception('Unknown error reading zip file.');
             }
 
             while (!feof($fp)) {
@@ -89,7 +89,6 @@ class IrcCloudParseLogs
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
-        unset($line[0], $line[1]);
 
         if ($line[2][0] === '<') {
             $logLine->setType('message');
