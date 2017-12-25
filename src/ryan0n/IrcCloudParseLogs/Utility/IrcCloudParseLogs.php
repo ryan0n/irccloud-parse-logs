@@ -8,7 +8,7 @@ use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use \Exception;
 use \ZipArchive;
 
-class IRCCloudParseLogs
+class IrcCloudParseLogs
 {
 
     /* @var string */

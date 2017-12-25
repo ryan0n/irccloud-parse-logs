@@ -4,7 +4,7 @@
 namespace ryan0n\IrcCloudParseLogs;
 
 use ryan0n\IrcCloudParseLogs\Export\ExportStandardOutput;
-use ryan0n\IrcCloudParseLogs\Utility\IRCCloudParseLogs;
+use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
 use \Exception;
 
 require_once 'vendor/autoload.php';
@@ -15,7 +15,7 @@ try {
         throw new Exception('Missing zip file. Usage: ./irccloud-parse-logs/bin/parse ./irccloud-export-11111-2017-12-20-15-19-11.zip');
     }
 
-    $objParser = new IRCCloudParseLogs(
+    $objParser = new IrcCloudParseLogs(
         $argv[1],
         new ExportStandardOutput()
     );
