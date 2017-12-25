@@ -22,7 +22,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getRawLine()
+    public function getRawLine(): ?string
     {
         return $this->rawLine;
     }
@@ -31,7 +31,7 @@ class LogLineModel
      * @param string|null $rawLine
      * @return LogLineModel
      */
-    public function setRawLine($rawLine): LogLineModel
+    public function setRawLine(?string $rawLine): LogLineModel
     {
         $this->rawLine = $rawLine;
         return $this;
@@ -40,7 +40,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getDateTime()
+    public function getDateTime(): ?string
     {
         return $this->dateTime;
     }
@@ -49,7 +49,7 @@ class LogLineModel
      * @param string|null $dateTime
      * @return LogLineModel
      */
-    public function setDateTime($dateTime): LogLineModel
+    public function setDateTime(?string $dateTime): LogLineModel
     {
         $this->dateTime = $dateTime;
         return $this;
@@ -58,7 +58,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -67,7 +67,7 @@ class LogLineModel
      * @param string|null $type
      * @return LogLineModel
      */
-    public function setType($type): LogLineModel
+    public function setType(?string $type): LogLineModel
     {
         $this->type = $type;
         return $this;
@@ -76,7 +76,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getNick()
+    public function getNick(): ?string
     {
         return $this->nick;
     }
@@ -85,7 +85,7 @@ class LogLineModel
      * @param string|null $nick
      * @return LogLineModel
      */
-    public function setNick($nick): LogLineModel
+    public function setNick(?string $nick): LogLineModel
     {
         $this->nick = $nick;
         return $this;
@@ -94,7 +94,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getChannel()
+    public function getChannel(): ?string
     {
         return $this->channel;
     }
@@ -103,7 +103,7 @@ class LogLineModel
      * @param string|null $channel
      * @return LogLineModel
      */
-    public function setChannel($channel): LogLineModel
+    public function setChannel(?string $channel): LogLineModel
     {
         $this->channel = $channel;
         return $this;
@@ -112,7 +112,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getMessage()
+    public function getMessage(): ?string
     {
         return $this->message;
     }
@@ -121,7 +121,7 @@ class LogLineModel
      * @param string|null $message
      * @return LogLineModel
      */
-    public function setMessage($message): LogLineModel
+    public function setMessage(?string $message): LogLineModel
     {
         $message = str_replace("\r\n", '', $message);
         $this->message = $message;
@@ -131,7 +131,7 @@ class LogLineModel
     /**
      * @return string|null
      */
-    public function getNetwork()
+    public function getNetwork(): ?string
     {
         return $this->network;
     }
@@ -140,7 +140,7 @@ class LogLineModel
      * @param string|null $network
      * @return LogLineModel
      */
-    public function setNetwork($network): LogLineModel
+    public function setNetwork(?string $network): LogLineModel
     {
         $this->network = $network;
         return $this;
