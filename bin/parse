@@ -3,11 +3,11 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\Export\ExportStandardOutput;
+use ryan0n\IrcCloudParseLogs\Export\ExportJson;
 use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
 use \Exception;
 
-require_once 'vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
     // First stage zip file validation
@@ -20,7 +20,7 @@ try {
 
     $objParser = new IrcCloudParseLogs(
         $zipFileName,
-        new ExportStandardOutput()
+        new ExportJson()
     );
 
     $objParser->run();

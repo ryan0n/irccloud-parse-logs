@@ -4,17 +4,15 @@ namespace ryan0n\IrcCloudParseLogs\Export;
 
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
-class ExportStandardOutput implements ExportInterface
+class ExportGenericOutput implements ExportInterface
 {
     public function export(LogLineModel $logLine) : bool
     {
         // Uncomment to only output lines with the search string present
-        /*
-        $search = "trump";
-        if (false === stripos($logLine->getRawLine(), $search)) {
+        $searchPhrase = '';
+        if (!empty($searchPhrase) && false === stripos($logLine->getRawLine(), $searchPhrase)) {
             return false;
         }
-        */
 
         $output =  "\n--------------------------";
         $output .= "\ndateTime: {$logLine->getDateTime()}";
