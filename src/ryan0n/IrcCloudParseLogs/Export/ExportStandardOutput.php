@@ -8,7 +8,7 @@ class ExportStandardOutput implements ExportInterface
 {
     public function export(LogLineModel $logLine) : bool
     {
-        if (false === stripos($logLine->getRawLine(), 'f ')) {
+        if (false === stripos($logLine->getRawLine(), 'ryan wright')) {
             return false;
         }
 

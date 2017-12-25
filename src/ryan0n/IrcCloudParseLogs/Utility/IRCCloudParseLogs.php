@@ -80,8 +80,7 @@ class IRCCloudParseLogs
         $logLine->setNetwork($network);
 
         // channel
-        $channel = explode('/', $fileName)[2];
-        $channel = substr($channel, strpos($channel, '-') + 1, strlen($channel));
+        $channel = trim(explode('/', $fileName)[2]);
         $channel = str_replace('.txt', '', $channel);
         $logLine->setChannel($channel);
 
