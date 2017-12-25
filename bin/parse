@@ -11,14 +11,18 @@ require_once 'vendor/autoload.php';
 
 try {
     // First stage zip file validation
-    if (empty($argv[1])) {
-        throw new Exception('Missing zip file. Usage: ./irccloud-parse-logs/bin/parse ./irccloud-export-11111-2017-12-20-15-19-11.zip');
+    if (!$zipFileName = $argv[1]) {
+        throw new Exception(
+            'No zip file given.'
+            . 'Usage: ./irccloud-parse-logs/bin/parse ./irccloud-export-11111-2017-12-20-15-19-11.zip'
+        );
     }
 
     $objParser = new IrcCloudParseLogs(
-        $argv[1],
+        $zipFileName,
         new ExportStandardOutput()
     );
+
     $objParser->run();
 } catch (Exception $e) {
     echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
