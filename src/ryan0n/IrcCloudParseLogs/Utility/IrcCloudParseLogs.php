@@ -84,13 +84,14 @@ class IrcCloudParseLogs
         $channel = str_replace('.txt', '', $channel);
         $logLine->setChannel($channel);
 
-        // The rest
+        // The date
         $line = explode(' ', $rawLogLine);
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
         unset($line[0], $line[1]);
 
+        // The rest
         if ($line[2][0] === '<') {
             $logLine->setType('message');
             $logLine->setNick(substr($line[2], 1, strlen($line[2]) - 2));
@@ -103,12 +104,12 @@ class IrcCloudParseLogs
             $logLine->setMessage(implode(' ', $line));
         } else {
             switch ($line[2]) {
-                case "→":
+                case '→':
                     $logLine->setType('joined');
                     $logLine->setNick($line[3]);
                     break;
-                case "←":
-                case "⇐":
+                case '←':
+                case '⇐':
                     if ($line[6] !== 'channel:') {
                         $logLine->setType('parted');
                         $logLine->setNick($line[3]);
