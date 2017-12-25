@@ -5,11 +5,21 @@ namespace ryan0n\IrcCloudParseLogs;
 
 use ryan0n\IrcCloudParseLogs\Export\ExportStandardOutput;
 use ryan0n\IrcCloudParseLogs\Utility\IRCCloudParseLogs;
+use \Exception;
 
 require_once 'vendor/autoload.php';
 
-$objParser = new IRCCloudParseLogs(
-    $argv[1],
-    new ExportStandardOutput()
-);
-$objParser->run();
+try {
+    // First stage zip file validation
+    if (empty($argv[1])) {
+        throw new Exception('Missing zip file. Usage: ./irccloud-parse-logs/bin/parse ./irccloud-export-11111-2017-12-20-15-19-11.zip');
+    }
+
+    $objParser = new IRCCloudParseLogs(
+        $argv[1],
+        new ExportStandardOutput()
+    );
+    $objParser->run();
+} catch (Exception $e) {
+    echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
+}

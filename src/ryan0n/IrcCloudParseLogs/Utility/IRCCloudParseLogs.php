@@ -5,7 +5,7 @@ namespace ryan0n\IrcCloudParseLogs\Utility;
 use ryan0n\IrcCloudParseLogs\Export\ExportInterface;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
-use \RuntimeException;
+use \Exception;
 use \ZipArchive;
 
 class IRCCloudParseLogs
@@ -23,6 +23,11 @@ class IRCCloudParseLogs
     ) {
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;
+
+        // Third stage zip file validation
+        if (!file_exists($this->zipFileName)) {
+            throw new Exception("File doesn't exist.");
+        }
     }
 
     public function run(): void
@@ -36,16 +41,18 @@ class IRCCloudParseLogs
         $zip = new ZipArchive;
         $zip->open($this->zipFileName);
 
-        if (!file_exists($this->zipFileName)) {
-            throw new RuntimeException("Error processing zip file {$this->zipFileName}.");
-        }
-
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
             $fp = $zip->getStream($zip->getNameIndex($i));
-            if (!$fp || substr_count($filename, '/') !== 2) {
-                throw new RuntimeException("Error processing zip file {$this->zipFileName}.");
+
+            // Third stage zip file validation
+            if (substr_count($filename, '/') !== 2) {
+                throw new Exception('Unexpected file structure.');
             }
+            if (!$fp) {
+                throw new Exception('Unknown error reading zip.');
+            }
+
             while (!feof($fp)) {
                 $line = fgets($fp);
                 $logLine = $this->getPopulatedLogLine($filename, $line);
