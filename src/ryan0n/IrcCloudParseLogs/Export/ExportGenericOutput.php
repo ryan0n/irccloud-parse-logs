@@ -8,7 +8,7 @@ class ExportGenericOutput implements ExportInterface
 {
     public function export(LogLineModel $logLine) : bool
     {
-        // Uncomment to only output lines with the search string present
+        // Populate $searchPhrase to only output lines with the search string present
         $searchPhrase = '';
         if (!empty($searchPhrase) && false === stripos($logLine->getRawLine(), $searchPhrase)) {
             return false;
