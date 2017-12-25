@@ -3,10 +3,13 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
+use ryan0n\IrcCloudParseLogs\Export\ExportStandardOutput;
+use ryan0n\IrcCloudParseLogs\Utility\IRCCloudParseLogs;
+
 require_once 'vendor/autoload.php';
 
-$objParser = new Utility\IRCCloudParseLogs(
+$objParser = new IRCCloudParseLogs(
     $argv[1],
-    new Export\ExportStandardOutput()
+    new ExportStandardOutput()
 );
 $objParser->run();

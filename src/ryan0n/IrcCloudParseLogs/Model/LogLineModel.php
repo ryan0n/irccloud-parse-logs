@@ -4,12 +4,19 @@ namespace ryan0n\IrcCloudParseLogs\Model;
 
 class LogLineModel
 {
+    /* @var string */
     private $rawLine;
+    /* @var string */
     private $dateTime;
+    /* @var string */
     private $type;
+    /* @var string */
     private $network;
+    /* @var string */
     private $channel;
+    /* @var string */
     private $nick;
+    /* @var string */
     private $message;
 
     /**

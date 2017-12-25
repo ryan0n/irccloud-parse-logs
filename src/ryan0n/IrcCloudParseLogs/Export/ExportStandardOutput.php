@@ -6,7 +6,7 @@ use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
 class ExportStandardOutput implements ExportInterface
 {
-    public function export(LogLineModel $logLine): bool
+    public function export(LogLineModel $logLine) : bool
     {
         if (false === stripos($logLine->getRawLine(), 'f ')) {
             return false;

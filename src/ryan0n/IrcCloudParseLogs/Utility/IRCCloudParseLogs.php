@@ -5,13 +5,13 @@ namespace ryan0n\IrcCloudParseLogs\Utility;
 use ryan0n\IrcCloudParseLogs\Export\ExportInterface;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
-use \Exception;
+use \RuntimeException;
 use \ZipArchive;
-
 
 class IRCCloudParseLogs
 {
 
+    /* @var string */
     protected $zipFileName;
 
     /* @var ExportInterface */
@@ -20,42 +20,45 @@ class IRCCloudParseLogs
     public function __construct(
         string $zipFileName,
         ExportInterface $exportDriver
-    )
-    {
+    ) {
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;
-
     }
 
     public function run(): void
     {
         $this->parseLogFile();
     }
+
     private function parseLogFile(): void
     {
 
         $zip = new ZipArchive;
-        if ($zip->open($this->zipFileName) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $filename = $zip->getNameIndex($i);
-                $fp = $zip->getStream($zip->getNameIndex($i));
-                if (!$fp || substr_count($filename, '/') !== 2) {
-                    throw new Exception('Bad filename.');
-                }
-                while (!feof($fp)) {
-                    $line = fgets($fp);
-                    $logLine = $this->getPopulatedLogLine($filename, $line);
-                    $this->exportDriver->export($logLine);
-                }
-                fclose($fp);
+        $zip->open($this->zipFileName);
+
+        if (!file_exists($this->zipFileName)) {
+            throw new RuntimeException("Error processing zip file {$this->zipFileName}.");
+        }
+
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fp = $zip->getStream($zip->getNameIndex($i));
+            if (!$fp || substr_count($filename, '/') !== 2) {
+                throw new RuntimeException("Error processing zip file {$this->zipFileName}.");
             }
+            while (!feof($fp)) {
+                $line = fgets($fp);
+                $logLine = $this->getPopulatedLogLine($filename, $line);
+                $this->exportDriver->export($logLine);
+            }
+            fclose($fp);
         }
     }
 
 
     private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLineModel
     {
-        // init DTO
+        // init object
         $logLine = new LogLineModel();
 
         // raw line
