@@ -1,10 +1,37 @@
 <?php
 
-namespace ryan0n\IRCCloudParseLogs;
+namespace ryan0n\IRCCloudParseLogs\DTO;
 
 
 class IRCCloudLogLine
 {
+
+    protected $rawLine;
+
+    protected $dateTime;
+    protected $type;
+    protected $network;
+    protected $channel;
+    protected $nick;
+    protected $message;
+
+
+    /**
+     * @return mixed
+     */
+    public function getRawLine()
+    {
+        return $this->rawLine;
+    }
+
+    /**
+     * @param mixed $rawLine
+     */
+    public function setRawLine($rawLine)
+    {
+        $this->rawLine = $rawLine;
+    }
+
     /**
      * @return mixed
      */
@@ -19,7 +46,7 @@ class IRCCloudLogLine
      */
     public function setDateTime($dateTime)
     {
-        $this->dateTime = addslashes($dateTime);
+        $this->dateTime = $dateTime;
         return $this;
     }
 
@@ -37,7 +64,7 @@ class IRCCloudLogLine
      */
     public function setType($type)
     {
-        $this->type = addslashes($type);
+        $this->type = $type;
         return $this;
     }
 
@@ -55,8 +82,8 @@ class IRCCloudLogLine
      */
     public function setNick($nick)
     {
-        if (strtolower($nick) != 'joined') {
-            $this->nick = addslashes($nick);
+        if (strtolower($nick) !== 'joined') {
+            $this->nick = $nick;
         }
         return $this;
     }
@@ -75,7 +102,7 @@ class IRCCloudLogLine
      */
     public function setChannel($channel)
     {
-        $this->channel = addslashes($channel);
+        $this->channel = $channel;
         return $this;
     }
 
@@ -94,7 +121,7 @@ class IRCCloudLogLine
     public function setMessage($message)
     {
         $message = str_replace("\r\n", '', $message);
-        $this->message = addslashes($message);
+        $this->message = $message;
         return $this;
     }
 
@@ -112,26 +139,8 @@ class IRCCloudLogLine
      */
     public function setNetwork($network)
     {
-        $this->network = addslashes($network);
+        $this->network = $network;
         return $this;
-    }
-
-    protected $dateTime;
-    protected $type;
-    protected $nick;
-    protected $channel;
-    protected $message;
-    protected $network;
-
-    protected $dbConnection;
-    protected $dbTable;
-
-    protected $numInserts;
-
-    public function __construct($dbConnection, $dbTable)
-    {
-        $this->dbConnection = $dbConnection;
-        $this->dbTable = $dbTable;
     }
 
     public function persist()
