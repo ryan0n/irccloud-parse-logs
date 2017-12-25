@@ -6,7 +6,7 @@ use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use Exception;
 use mysqli;
 
-class ExportMySQL implements ExportInterface
+class MySQL implements ExportDriverInterface
 {
     const DB_HOST = '';
     const DB_PORT = '';

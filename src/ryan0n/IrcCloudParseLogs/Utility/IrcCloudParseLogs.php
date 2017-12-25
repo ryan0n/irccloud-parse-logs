@@ -2,7 +2,7 @@
 
 namespace ryan0n\IrcCloudParseLogs\Utility;
 
-use ryan0n\IrcCloudParseLogs\Export\ExportInterface;
+use ryan0n\IrcCloudParseLogs\Export\ExportDriverInterface;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
 use \Exception;
@@ -14,12 +14,12 @@ class IrcCloudParseLogs
     /* @var string */
     protected $zipFileName;
 
-    /* @var ExportInterface */
+    /* @var ExportDriverInterface */
     protected $exportDriver;
 
     public function __construct(
         string $zipFileName,
-        ExportInterface $exportDriver
+        ExportDriverInterface $exportDriver
     ) {
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;

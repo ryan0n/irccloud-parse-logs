@@ -3,7 +3,7 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\Export\ExportJson;
+use ryan0n\IrcCloudParseLogs\Export\ExportDriverFactory;
 use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
 use \Exception;
 
@@ -20,7 +20,7 @@ try {
 
     $objParser = new IrcCloudParseLogs(
         $zipFileName,
-        new ExportJson()
+        ExportDriverFactory::factory('Json')
     );
 
     $objParser->run();
