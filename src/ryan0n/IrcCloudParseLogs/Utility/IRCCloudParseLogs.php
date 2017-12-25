@@ -43,12 +43,15 @@ class IRCCloudParseLogs
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
-            $fp = $zip->getStream($zip->getNameIndex($i));
 
             // Third stage zip file validation
             if (substr_count($filename, '/') !== 2) {
                 throw new Exception('Unexpected file structure.');
             }
+
+            $fp = $zip->getStream($zip->getNameIndex($i));
+
+            // Fourth stage zip file validation
             if (!$fp) {
                 throw new Exception('Unknown error reading zip.');
             }
