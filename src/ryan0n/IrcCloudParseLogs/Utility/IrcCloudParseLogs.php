@@ -89,6 +89,7 @@ class IrcCloudParseLogs
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
+        unset($line[0], $line[1]);
 
         if ($line[2][0] === '<') {
             $logLine->setType('message');

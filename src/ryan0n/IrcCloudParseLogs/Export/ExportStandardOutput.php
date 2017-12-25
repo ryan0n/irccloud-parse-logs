@@ -8,12 +8,17 @@ class ExportStandardOutput implements ExportInterface
 {
     public function export(LogLineModel $logLine) : bool
     {
-        if (false === stripos($logLine->getRawLine(), 'ryan wright')) {
+        // Uncomment to only output lines with the search string present
+        /*
+        $search = "trump";
+        if (false === stripos($logLine->getRawLine(), $search)) {
             return false;
         }
+        */
 
         $output =  "\n--------------------------";
         $output .= "\ndateTime: {$logLine->getDateTime()}";
+        $output .= "\ntype:     {$logLine->getType()}";
         $output .= "\nnetwork:  {$logLine->getNetwork()}";
         $output .= "\nchannel:  {$logLine->getChannel()}";
         $output .= "\nnick:     {$logLine->getNick()}";
