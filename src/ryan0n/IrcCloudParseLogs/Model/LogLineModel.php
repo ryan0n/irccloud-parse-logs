@@ -20,7 +20,7 @@ class LogLineModel
     private $message;
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getRawLine()
     {
@@ -28,7 +28,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $rawLine
+     * @param string|null $rawLine
      * @return LogLineModel
      */
     public function setRawLine($rawLine): LogLineModel
@@ -38,7 +38,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getDateTime()
     {
@@ -46,7 +46,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $dateTime
+     * @param string|null $dateTime
      * @return LogLineModel
      */
     public function setDateTime($dateTime): LogLineModel
@@ -56,7 +56,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getType()
     {
@@ -64,7 +64,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $type
+     * @param string|null $type
      * @return LogLineModel
      */
     public function setType($type): LogLineModel
@@ -74,7 +74,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getNick()
     {
@@ -82,7 +82,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $nick
+     * @param string|null $nick
      * @return LogLineModel
      */
     public function setNick($nick): LogLineModel
@@ -92,7 +92,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getChannel()
     {
@@ -100,7 +100,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $channel
+     * @param string|null $channel
      * @return LogLineModel
      */
     public function setChannel($channel): LogLineModel
@@ -110,7 +110,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getMessage()
     {
@@ -118,7 +118,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $message
+     * @param string|null $message
      * @return LogLineModel
      */
     public function setMessage($message): LogLineModel
@@ -129,7 +129,7 @@ class LogLineModel
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getNetwork()
     {
@@ -137,7 +137,7 @@ class LogLineModel
     }
 
     /**
-     * @param mixed $network
+     * @param string|null $network
      * @return LogLineModel
      */
     public function setNetwork($network): LogLineModel
@@ -146,7 +146,10 @@ class LogLineModel
         return $this;
     }
 
-    public function toArray()
+    /**
+     * @return array
+     */
+    public function toArray(): array
     {
         return get_object_vars($this);
     }
