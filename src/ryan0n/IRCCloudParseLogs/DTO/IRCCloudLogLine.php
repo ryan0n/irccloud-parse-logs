@@ -5,16 +5,13 @@ namespace ryan0n\IRCCloudParseLogs\DTO;
 
 class IRCCloudLogLine
 {
-
-    protected $rawLine;
-
-    protected $dateTime;
-    protected $type;
-    protected $network;
-    protected $channel;
-    protected $nick;
-    protected $message;
-
+    private $rawLine;
+    private $dateTime;
+    private $type;
+    private $network;
+    private $channel;
+    private $nick;
+    private $message;
 
     /**
      * @return mixed
@@ -26,8 +23,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $rawLine
+     * @return IRCCloudLogLine
      */
-    public function setRawLine($rawLine)
+    public function setRawLine($rawLine): IRCCloudLogLine
     {
         $this->rawLine = $rawLine;
     }
@@ -44,7 +42,7 @@ class IRCCloudLogLine
      * @param mixed $dateTime
      * @return IRCCloudLogLine
      */
-    public function setDateTime($dateTime)
+    public function setDateTime($dateTime): IRCCloudLogLine
     {
         $this->dateTime = $dateTime;
         return $this;
@@ -62,7 +60,7 @@ class IRCCloudLogLine
      * @param mixed $type
      * @return IRCCloudLogLine
      */
-    public function setType($type)
+    public function setType($type): IRCCloudLogLine
     {
         $this->type = $type;
         return $this;
@@ -80,11 +78,9 @@ class IRCCloudLogLine
      * @param mixed $nick
      * @return IRCCloudLogLine
      */
-    public function setNick($nick)
+    public function setNick($nick): IRCCloudLogLine
     {
-        if (strtolower($nick) !== 'joined') {
-            $this->nick = $nick;
-        }
+        $this->nick = $nick;
         return $this;
     }
 
@@ -100,7 +96,7 @@ class IRCCloudLogLine
      * @param mixed $channel
      * @return IRCCloudLogLine
      */
-    public function setChannel($channel)
+    public function setChannel($channel): IRCCloudLogLine
     {
         $this->channel = $channel;
         return $this;
@@ -118,7 +114,7 @@ class IRCCloudLogLine
      * @param mixed $message
      * @return IRCCloudLogLine
      */
-    public function setMessage($message)
+    public function setMessage($message): IRCCloudLogLine
     {
         $message = str_replace("\r\n", '', $message);
         $this->message = $message;
@@ -137,36 +133,9 @@ class IRCCloudLogLine
      * @param mixed $network
      * @return IRCCloudLogLine
      */
-    public function setNetwork($network)
+    public function setNetwork($network): IRCCloudLogLine
     {
         $this->network = $network;
         return $this;
-    }
-
-    public function persist()
-    {
-
-
-        // TODO: FIX THIS GARBAGE
-        /*
-        $sql = "
-          INSERT IGNORE INTO ".$this->dbTable .
-          "VALUES (null,'{$this->network}', '{$this->dateTime}', '{$this->type}', '"
-          . "{$this->nick}','{$this->channel}','{$this->message}')";
-        $sha1 = substr(sha1($sql), 0, 20);
-        $sql = "INSERT IGNORE INTO ".$this->dbTable." VALUES (null,'{$this->network}','{$this->dateTime}','{$this->type}','{$this->nick}','{$this->channel}','{$this->message}','{$sha1}')";
-        $this->dbConnection->query($sql);
-
-        return;
-
-        return [
-            'network' =>  $this->network,
-            'dateTime' => $this->dateTime,
-            'type' => $this->type,
-            'nick' => $this->nick,
-            'channel' => $this->channel,
-            'message' => $this->message,
-        ];
-        */
     }
 }
