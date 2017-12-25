@@ -69,15 +69,12 @@ class IRCCloudParseLogs
 
 
         // The rest
-
         $line = explode(' ', $rawLogLine);
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
         unset($line[0], $line[1]);
-
-
-
+        
         if ($line[2][0] === '<') {
             $logLine->setType('message');
             $logLine->setNick(substr($line[2], 1, strlen($line[2]) - 2));
@@ -100,13 +97,10 @@ class IRCCloudParseLogs
                     if ($line[6] != 'channel:') {
                         $logLine->setType('parted');
                         $logLine->setNick($line[3]);
-                        #$logLine->setMessage($line[5]);
                     }
                     break;
                 default:
                     $logLine->setType('other');
-                    #echo "\n".$line[5][0]."\n";
-                    #$logLine->setNick('');
                     $logLine->setMessage(implode(" ", $line));
                     break;
             }
