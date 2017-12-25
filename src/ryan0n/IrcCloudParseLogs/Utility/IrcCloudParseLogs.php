@@ -4,7 +4,6 @@ namespace ryan0n\IrcCloudParseLogs\Utility;
 
 use ryan0n\IrcCloudParseLogs\Export\ExportDriverInterface;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
-
 use \Exception;
 use \ZipArchive;
 
@@ -32,12 +31,6 @@ class IrcCloudParseLogs
 
     public function run(): void
     {
-        $this->parseLogFile();
-    }
-
-    private function parseLogFile(): void
-    {
-
         $zip = new ZipArchive;
         $zip->open($this->zipFileName);
 
