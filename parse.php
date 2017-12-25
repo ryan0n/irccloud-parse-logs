@@ -10,7 +10,7 @@ class IRCCloudLogParser
     protected $dbTable;
     protected $currentNetwork;
 
-    function __construct()
+    public function __construct()
     {
         global $argv;
         $filePath = $argv[1];
@@ -18,13 +18,15 @@ class IRCCloudLogParser
         $this->dbTable = "irccloud";
         #$this->dbConnection->query("TRUNCATE TABLE irccloud");
         $this->files = $this->getFiles($filePath);
-
     }
 
     private function getFiles($path)
     {
-        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($objects as $name => $object){
+        $objects = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($path),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($objects as $name => $object) {
             if ($object->getExtension()=="txt") {
                 $this->parseLogFile($name, $object);
                 #echo "\n";
@@ -52,19 +54,20 @@ class IRCCloudLogParser
         $total_lines = count($file) - 1;
         $current_lines=0;
         $newlinesent = false;
-        $newlinesent = false;
 
         $network = $this->getNetwork($object);
         $channel = str_replace(".txt", "", $object->getFilename());
 
 
-        foreach($file as $line) {
+        foreach ($file as $line) {
             $logLine = new logLine($this->dbConnection, $this->dbTable);
             $logLine->setNetwork($network);
             $logLine->setChannel($channel);
 
             $line = explode(" ", $line);
-            $logLine->setDateTime(substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2));
+            $logLine->setDateTime(
+                substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
+            );
             unset($line[0], $line[1]);
 
             if ($line[2][0] == '<') {
@@ -106,7 +109,7 @@ class IRCCloudLogParser
                     $newlinesent = true;
                     $this->show_status($current_lines, $total_lines, $logLine, true);
                 } else {
-                    if($current_lines % 5000 == 0 || $current_lines == $total_lines) {
+                    if ($current_lines % 5000 == 0 || $current_lines == $total_lines) {
                         $this->show_status($current_lines, $total_lines, $logLine);
                     }
                 }
@@ -116,18 +119,20 @@ class IRCCloudLogParser
 
 
         }
-
     }
 
-    private function show_status($done, $total, $logLine, $reset=false, $size=30) {
+    private function showStatus($done, $total, $logLine, $reset = false, $size = 30)
+    {
 
 
         static $start_time;
 
         // if we go over our bound, just ignore it
-        if($done > $total) return;
+        if ($done > $total) {
+            return;
+        }
 
-        if(empty($start_time) || $reset) {
+        if (empty($start_time) || $reset) {
             echo "\n";
             $start_time=time();
         }
@@ -139,7 +144,7 @@ class IRCCloudLogParser
 
         $status_bar="\r[";
         $status_bar.=str_repeat("=", $bar);
-        if($bar<$size){
+        if ($bar<$size) {
             $status_bar.=">";
             $status_bar.=str_repeat(" ", $size-$bar);
         } else {
@@ -163,15 +168,13 @@ class IRCCloudLogParser
         flush();
 
         // when done, send a newline
-        if($done == $total) {
+        if ($done == $total) {
             #echo "\n";
         }
-
     }
 
     public function run()
     {
-
     }
 
 
@@ -300,7 +303,7 @@ class logLine
     protected $dbConnection;
     protected $dbTable;
 
-    var $numInserts;
+    protected $numInserts;
 
     public function __construct($dbConnection, $dbTable)
     {
@@ -308,9 +311,16 @@ class logLine
         $this->dbTable = $dbTable;
     }
 
-    public function persist() {
+    public function persist()
+    {
 
-        $sql = "INSERT IGNORE INTO ".$this->dbTable." VALUES (null,'{$this->network}','{$this->dateTime}','{$this->type}','{$this->nick}','{$this->channel}','{$this->message}')";
+
+        // TODO: FIX THIS GARBAGE
+        /*
+        $sql = "
+          INSERT IGNORE INTO ".$this->dbTable .
+          "VALUES (null,'{$this->network}', '{$this->dateTime}', '{$this->type}', '"
+          . "{$this->nick}','{$this->channel}','{$this->message}')";
         $sha1 = substr(sha1($sql), 0, 20);
         $sql = "INSERT IGNORE INTO ".$this->dbTable." VALUES (null,'{$this->network}','{$this->dateTime}','{$this->type}','{$this->nick}','{$this->channel}','{$this->message}','{$sha1}')";
         $this->dbConnection->query($sql);
@@ -325,13 +335,9 @@ class logLine
             'channel' => $this->channel,
             'message' => $this->message,
         ];
+        */
     }
-
 }
 
 $objParser = new IRCCloudLogParser();
 $objParser->run();
-
-
-
-?>
