@@ -1,4 +1,8 @@
 <?php
 
-$objParser = new ryan0n\IRCCloudParseLogs\IRCCloudParseLogs();
+require_once 'vendor/autoload.php';
+
+use ryan0n\IRCCloudParseLogs\IRCCloudParseLogs;
+
+$objParser = new IRCCloudParseLogs();
 $objParser->run();

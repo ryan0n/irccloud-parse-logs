@@ -2,6 +2,10 @@
 
 namespace ryan0n\IRCCloudParseLogs;
 
+use \mysqli;
+use \RecursiveIteratorIterator;
+use \RecursiveDirectoryIterator;
+
 class IRCCloudParseLogs
 {
 
