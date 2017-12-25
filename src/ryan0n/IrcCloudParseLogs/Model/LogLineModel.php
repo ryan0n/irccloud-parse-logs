@@ -1,9 +1,8 @@
 <?php
 
-namespace ryan0n\IRCCloudParseLogs\DTO;
+namespace ryan0n\IrcCloudParseLogs\Model;
 
-
-class LogLine
+class LogLineModel
 {
     private $rawLine;
     private $dateTime;
@@ -23,9 +22,9 @@ class LogLine
 
     /**
      * @param mixed $rawLine
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setRawLine($rawLine): LogLine
+    public function setRawLine($rawLine): LogLineModel
     {
         $this->rawLine = $rawLine;
         return $this;
@@ -41,9 +40,9 @@ class LogLine
 
     /**
      * @param mixed $dateTime
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setDateTime($dateTime): LogLine
+    public function setDateTime($dateTime): LogLineModel
     {
         $this->dateTime = $dateTime;
         return $this;
@@ -59,9 +58,9 @@ class LogLine
 
     /**
      * @param mixed $type
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setType($type): LogLine
+    public function setType($type): LogLineModel
     {
         $this->type = $type;
         return $this;
@@ -77,9 +76,9 @@ class LogLine
 
     /**
      * @param mixed $nick
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setNick($nick): LogLine
+    public function setNick($nick): LogLineModel
     {
         $this->nick = $nick;
         return $this;
@@ -95,9 +94,9 @@ class LogLine
 
     /**
      * @param mixed $channel
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setChannel($channel): LogLine
+    public function setChannel($channel): LogLineModel
     {
         $this->channel = $channel;
         return $this;
@@ -113,9 +112,9 @@ class LogLine
 
     /**
      * @param mixed $message
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setMessage($message): LogLine
+    public function setMessage($message): LogLineModel
     {
         $message = str_replace("\r\n", '', $message);
         $this->message = $message;
@@ -132,9 +131,9 @@ class LogLine
 
     /**
      * @param mixed $network
-     * @return LogLine
+     * @return LogLineModel
      */
-    public function setNetwork($network): LogLine
+    public function setNetwork($network): LogLineModel
     {
         $this->network = $network;
         return $this;

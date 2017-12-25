@@ -1,13 +1,12 @@
 #!/usr/bin/env php
 <?php
 
+namespace ryan0n\IrcCloudParseLogs;
+
 require_once 'vendor/autoload.php';
 
-use ryan0n\IRCCloudParseLogs\ExportDriver\StandardOutput;
-use ryan0n\IRCCloudParseLogs\IRCCloudParseLogs;
-
-$objParser = new IRCCloudParseLogs(
+$objParser = new Utility\IRCCloudParseLogs(
     $argv[1],
-    new StandardOutput()
+    new Export\ExportStandardOutput()
 );
 $objParser->run();

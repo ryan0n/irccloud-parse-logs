@@ -1,12 +1,12 @@
 <?php
 
-namespace ryan0n\IRCCloudParseLogs\ExportDriver;
+namespace ryan0n\IrcCloudParseLogs\Export;
 
-use ryan0n\IRCCloudParseLogs\DTO\LogLine;
+use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
-class StandardOutput implements ExportDriverInterface
+class ExportStandardOutput implements ExportInterface
 {
-    public function export(LogLine $logLine): bool
+    public function export(LogLineModel $logLine): bool
     {
         if (false === stripos($logLine->getRawLine(), 'f ')) {
             return false;

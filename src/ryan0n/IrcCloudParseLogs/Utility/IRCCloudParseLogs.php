@@ -1,9 +1,10 @@
 <?php
 
-namespace ryan0n\IRCCloudParseLogs;
+namespace ryan0n\IrcCloudParseLogs\Utility;
 
-use ryan0n\IRCCloudParseLogs\DTO\LogLine;
-use ryan0n\IRCCloudParseLogs\ExportDriver\ExportDriverInterface;
+use ryan0n\IrcCloudParseLogs\Export\ExportInterface;
+use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
+
 use \Exception;
 use \ZipArchive;
 
@@ -13,12 +14,12 @@ class IRCCloudParseLogs
 
     protected $zipFileName;
 
-    /* @var ExportDriverInterface */
+    /* @var ExportInterface */
     protected $exportDriver;
 
     public function __construct(
         string $zipFileName,
-        ExportDriverInterface $exportDriver
+        ExportInterface $exportDriver
     )
     {
         $this->zipFileName = $zipFileName;
@@ -52,10 +53,10 @@ class IRCCloudParseLogs
     }
 
 
-    private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLine
+    private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLineModel
     {
         // init DTO
-        $logLine = new LogLine();
+        $logLine = new LogLineModel();
 
         // raw line
         $logLine->setRawLine($rawLogLine);
