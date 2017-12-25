@@ -9,6 +9,8 @@ use \RecursiveDirectoryIterator;
 class IRCCloudParseLogs
 {
 
+    protected $zipFileName;
+
     protected $files;
     protected $dbConnection;
     protected $dbTable;
@@ -17,11 +19,15 @@ class IRCCloudParseLogs
     public function __construct()
     {
         global $argv;
-        $filePath = $argv[1];
-        $this->dbConnection = new mysqli('localhost', 'nobody', '', 'test');
-        $this->dbTable = "irccloud";
-        #$this->dbConnection->query("TRUNCATE TABLE irccloud");
-        $this->files = $this->getFiles($filePath);
+
+        $this->zipFileName = $argv[1];
+
+        // TODO: Database stuff
+//        $this->dbConnection = new mysqli('localhost', 'nobody', '', 'test');
+//        $this->dbTable = "irccloud";
+//        $this->dbConnection->query("TRUNCATE TABLE irccloud");
+
+        $this->parseLogFile();
     }
 
     private function getFiles($path)
@@ -51,8 +57,28 @@ class IRCCloudParseLogs
         return $network;
     }
 
-    private function parseLogFile($filePath, $object)
+    private function parseLogFile()
     {
+
+        $zip = new \ZipArchive;
+        if ($zip->open($this->zipFileName) === TRUE)
+        {
+            for($i = 0; $i < $zip->numFiles; $i++)
+            {
+                echo "\n\nfilename: {$zip->getNameIndex($i)}\n\n";
+                $fp = $zip->getStream($zip->getNameIndex($i));
+                if (!$fp) {
+                    exit("failed\n");
+                }
+                while (!feof($fp)) {
+                    $contents = fread($fp, 8192);
+                    print_r($fp);
+                    print_r($contents);
+                }
+                fclose($fp);
+            }
+        }
+exit;
         $file = file($filePath);
 
         $total_lines = count($file) - 1;
