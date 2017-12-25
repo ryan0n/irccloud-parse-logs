@@ -3,7 +3,7 @@
 namespace ryan0n\IRCCloudParseLogs\DTO;
 
 
-class IRCCloudLogLine
+class LogLine
 {
     private $rawLine;
     private $dateTime;
@@ -23,11 +23,12 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $rawLine
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setRawLine($rawLine): IRCCloudLogLine
+    public function setRawLine($rawLine): LogLine
     {
         $this->rawLine = $rawLine;
+        return $this;
     }
 
     /**
@@ -40,9 +41,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $dateTime
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setDateTime($dateTime): IRCCloudLogLine
+    public function setDateTime($dateTime): LogLine
     {
         $this->dateTime = $dateTime;
         return $this;
@@ -58,9 +59,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $type
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setType($type): IRCCloudLogLine
+    public function setType($type): LogLine
     {
         $this->type = $type;
         return $this;
@@ -76,9 +77,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $nick
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setNick($nick): IRCCloudLogLine
+    public function setNick($nick): LogLine
     {
         $this->nick = $nick;
         return $this;
@@ -94,9 +95,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $channel
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setChannel($channel): IRCCloudLogLine
+    public function setChannel($channel): LogLine
     {
         $this->channel = $channel;
         return $this;
@@ -112,9 +113,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $message
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setMessage($message): IRCCloudLogLine
+    public function setMessage($message): LogLine
     {
         $message = str_replace("\r\n", '', $message);
         $this->message = $message;
@@ -131,9 +132,9 @@ class IRCCloudLogLine
 
     /**
      * @param mixed $network
-     * @return IRCCloudLogLine
+     * @return LogLine
      */
-    public function setNetwork($network): IRCCloudLogLine
+    public function setNetwork($network): LogLine
     {
         $this->network = $network;
         return $this;

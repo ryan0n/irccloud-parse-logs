@@ -2,7 +2,8 @@
 
 namespace ryan0n\IRCCloudParseLogs;
 
-use ryan0n\IRCCloudParseLogs\DTO\IRCCloudLogLine;
+use ryan0n\IRCCloudParseLogs\DTO\LogLine;
+use ryan0n\IRCCloudParseLogs\ExportDriver\ExportDriverInterface;
 use \Exception;
 use \ZipArchive;
 
@@ -12,20 +13,23 @@ class IRCCloudParseLogs
 
     protected $zipFileName;
 
-    protected $files;
-    protected $dbConnection;
-    protected $dbTable;
-    protected $currentNetwork;
+    /* @var ExportDriverInterface */
+    protected $exportDriver;
 
-    public function __construct()
+    public function __construct(
+        string $zipFileName,
+        ExportDriverInterface $exportDriver
+    )
     {
-        global $argv;
+        $this->zipFileName = $zipFileName;
+        $this->exportDriver = $exportDriver;
 
-        $this->zipFileName = $argv[1];
-
-        $this->parseLogFile();
     }
 
+    public function run(): void
+    {
+        $this->parseLogFile();
+    }
     private function parseLogFile(): void
     {
 
@@ -40,7 +44,7 @@ class IRCCloudParseLogs
                 while (!feof($fp)) {
                     $line = fgets($fp);
                     $logLine = $this->getPopulatedLogLine($filename, $line);
-                    // TODO: Do stuff with logLine. Persist it?
+                    $this->exportDriver->export($logLine);
                 }
                 fclose($fp);
             }
@@ -48,10 +52,10 @@ class IRCCloudParseLogs
     }
 
 
-    private function getPopulatedLogLine(string $fileName, string $rawLogLine): IRCCloudLogLine
+    private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLine
     {
         // init DTO
-        $logLine = new IRCCloudLogLine();
+        $logLine = new LogLine();
 
         // raw line
         $logLine->setRawLine($rawLogLine);
@@ -67,14 +71,13 @@ class IRCCloudParseLogs
         $channel = str_replace('.txt', '', $channel);
         $logLine->setChannel($channel);
 
-
         // The rest
         $line = explode(' ', $rawLogLine);
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
         unset($line[0], $line[1]);
-        
+
         if ($line[2][0] === '<') {
             $logLine->setType('message');
             $logLine->setNick(substr($line[2], 1, strlen($line[2]) - 2));
@@ -90,18 +93,17 @@ class IRCCloudParseLogs
                 case "→":
                     $logLine->setType('joined');
                     $logLine->setNick($line[3]);
-                    #$logLine->setMessage($line[5]);
                     break;
                 case "←":
                 case "⇐":
-                    if ($line[6] != 'channel:') {
+                    if ($line[6] !== 'channel:') {
                         $logLine->setType('parted');
                         $logLine->setNick($line[3]);
                     }
                     break;
                 default:
                     $logLine->setType('other');
-                    $logLine->setMessage(implode(" ", $line));
+                    $logLine->setMessage(implode(' ', $line));
                     break;
             }
         }
