@@ -67,7 +67,7 @@ class IrcCloudParseLogs
     }
 
     /**
-     * @throws Exception
+     * @throws UnparsableZipFileException
      */
     public function run(): void
     {
