@@ -2,6 +2,10 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
+use ryan0n\IrcCloudParseLogs\Exception\ {
+    ExportDriverNotFoundException,
+    UnparsableZipFileException
+};
 use ryan0n\IrcCloudParseLogs\ExportDriver\ {
     ExportDriverInterface,
     GenericOutput,
@@ -12,16 +16,10 @@ use ryan0n\IrcCloudParseLogs\Model\ {
     ConfigModel,
     LogLineModel
 };
-use ryan0n\IrcCloudParseLogs\Exception\ {
-    ExportDriverNotFoundException,
-    UnparsableZipFileException
-};
-use Exception;
 use ZipArchive;
 
 class IrcCloudParseLogs
 {
-
     /** @var ConfigModel $configModel */
     protected $configModel;
 
@@ -31,7 +29,6 @@ class IrcCloudParseLogs
     /**
      * @param ConfigModel $configModel
      * @throws UnparsableZipFileException
-     * @throws ExportDriverNotFoundException
      */
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
