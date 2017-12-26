@@ -16,13 +16,13 @@ class IrcCloudParseLogs
     /** @var ExportDriverInterface */
     protected $exportDriver;
 
-    /** @var string $searchPhrase */
+    /** @var string|null $searchPhrase */
     protected $searchPhrase;
 
     public function __construct(
         string $zipFileName,
         ExportDriverInterface $exportDriver,
-        $searchPhrase = null
+        ?string $searchPhrase = null
     ) {
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;
