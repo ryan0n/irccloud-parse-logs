@@ -34,7 +34,7 @@ class IrcCloudParseLogs
         $this->configModel = $configModel;
         $this->exportDriver = $this->exportDriverFactory($configModel->getExportDriver());
 
-        // Second stage zip file validation
+        // zip file validation
         if (!file_exists($this->configModel->getZipFile())) {
             throw new UnparsableZipFileException("File doesn't exist.");
         }
