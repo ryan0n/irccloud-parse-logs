@@ -25,10 +25,11 @@ try {
     }
 
     $objParser = new IrcCloudParseLogs($options);
-
     $objParser->run();
+
 } catch (Exception $e) {
     echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
+
 }
 
 /**

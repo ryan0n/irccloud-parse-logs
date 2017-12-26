@@ -156,18 +156,18 @@ class LogLineModel
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getLineNumber(): int
+    public function getLineNumber(): ?int
     {
         return $this->lineNumber;
     }
 
     /**
-     * @param int $lineNumber
+     * @param int|null $lineNumber
      * @return LogLineModel
      */
-    public function setLineNumber(int $lineNumber): LogLineModel
+    public function setLineNumber(?int $lineNumber): LogLineModel
     {
         $this->lineNumber = $lineNumber;
         return $this;
