@@ -3,8 +3,7 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\Model\CliOptionsModel;
-use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
+use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
 use Exception;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -17,7 +16,7 @@ try {
             $options[$matches[1][0]] = $matches[2][0];
         }
     }
-    $options = new CliOptionsModel($options);
+    $options = new ConfigModel($options);
 
     // First stage zip file validation
     if (empty($options->getZipFile())) {

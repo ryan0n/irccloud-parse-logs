@@ -1,12 +1,12 @@
 <?php
 
-namespace ryan0n\IrcCloudParseLogs\Utility;
+namespace ryan0n\IrcCloudParseLogs;
 
 use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
 use ryan0n\IrcCloudParseLogs\ExportDriver\GenericOutput;
 use ryan0n\IrcCloudParseLogs\ExportDriver\Json;
 use ryan0n\IrcCloudParseLogs\ExportDriver\MySQL;
-use ryan0n\IrcCloudParseLogs\Model\CliOptionsModel;
+use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use Exception;
 use ZipArchive;
@@ -14,13 +14,13 @@ use ZipArchive;
 class IrcCloudParseLogs
 {
 
-    /** @var CliOptionsModel */
+    /** @var ConfigModel */
     protected $cliOptionsModel;
 
     /** @var ExportDriverInterface */
     protected $exportDriver;
 
-    public function __construct(CliOptionsModel $cliOptionsModel) {
+    public function __construct(ConfigModel $cliOptionsModel) {
         $this->cliOptionsModel = $cliOptionsModel;
         $this->exportDriver = $this->exportDriverFactory($cliOptionsModel->getExportDriver());
 

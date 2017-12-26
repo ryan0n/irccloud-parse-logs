@@ -31,12 +31,10 @@ class LogLineModel
 
     /**
      * @param string|null $rawLine
-     * @return LogLineModel
      */
-    public function setRawLine(?string $rawLine): LogLineModel
+    public function setRawLine(?string $rawLine): void
     {
         $this->rawLine = $rawLine;
-        return $this;
     }
 
     /**
@@ -49,12 +47,10 @@ class LogLineModel
 
     /**
      * @param string|null $dateTime
-     * @return LogLineModel
      */
-    public function setDateTime(?string $dateTime): LogLineModel
+    public function setDateTime(?string $dateTime): void
     {
         $this->dateTime = $dateTime;
-        return $this;
     }
 
     /**
@@ -67,12 +63,10 @@ class LogLineModel
 
     /**
      * @param string|null $type
-     * @return LogLineModel
      */
-    public function setType(?string $type): LogLineModel
+    public function setType(?string $type): void
     {
         $this->type = $type;
-        return $this;
     }
 
     /**
@@ -85,12 +79,10 @@ class LogLineModel
 
     /**
      * @param string|null $nick
-     * @return LogLineModel
      */
-    public function setNick(?string $nick): LogLineModel
+    public function setNick(?string $nick): void
     {
         $this->nick = $nick;
-        return $this;
     }
 
     /**
@@ -103,12 +95,10 @@ class LogLineModel
 
     /**
      * @param string|null $channel
-     * @return LogLineModel
      */
-    public function setChannel(?string $channel): LogLineModel
+    public function setChannel(?string $channel): void
     {
         $this->channel = $channel;
-        return $this;
     }
 
     /**
@@ -121,12 +111,10 @@ class LogLineModel
 
     /**
      * @param string|null $message
-     * @return LogLineModel
      */
-    public function setMessage(?string $message): LogLineModel
+    public function setMessage(?string $message): void
     {
         $this->message = $message;
-        return $this;
     }
 
     /**
@@ -139,12 +127,10 @@ class LogLineModel
 
     /**
      * @param string|null $network
-     * @return LogLineModel
      */
-    public function setNetwork(?string $network): LogLineModel
+    public function setNetwork(?string $network): void
     {
         $this->network = $network;
-        return $this;
     }
 
     /**
@@ -165,11 +151,9 @@ class LogLineModel
 
     /**
      * @param int|null $lineNumber
-     * @return LogLineModel
      */
-    public function setLineNumber(?int $lineNumber): LogLineModel
+    public function setLineNumber(?int $lineNumber): void
     {
         $this->lineNumber = $lineNumber;
-        return $this;
     }
 }

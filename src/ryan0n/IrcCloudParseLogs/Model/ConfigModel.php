@@ -2,7 +2,7 @@
 
 namespace ryan0n\IrcCloudParseLogs\Model;
 
-class CliOptionsModel
+class ConfigModel
 {
     /** @var string $searchPhrase */
     private $searchPhrase;
