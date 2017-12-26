@@ -3,6 +3,10 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
+use ryan0n\IrcCloudParseLogs\Exception\ {
+    ExportDriverNotFoundException,
+    UnparsableZipFileException
+};
 use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
 use Exception;
 
@@ -19,16 +23,19 @@ try {
     $config = new ConfigModel($options);
 
     // First stage zip file validation
-    if (empty($config->getZipFile())) {
-        throw new Exception('No zip file given. ' . getUsage());
+    if (null === $config->getZipFile()) {
+        throw new UnparsableZipFileException('No zip file given. ' . getUsage());
     }
 
     $objParser = new IrcCloudParseLogs($config);
     $objParser->run();
 
+} catch (UnparsableZipFileException $e) {
+    echo "\n" . 'Error occurred parsing zip file: ' . $e->getMessage() . "\n\n";
+} catch (ExportDriverNotFoundException $e) {
+    echo "\n" . 'Error occurred initializing export driver: ' . $e->getMessage() . "\n\n";
 } catch (Exception $e) {
-    echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
-
+    echo "\n" . 'An unknown error occurred: ' . $e->getMessage() . "\n\n";
 }
 
 /**

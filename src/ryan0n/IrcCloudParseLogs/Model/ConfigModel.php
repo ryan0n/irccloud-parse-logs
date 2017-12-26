@@ -6,7 +6,7 @@ class ConfigModel
 {
     /** @var string|null $searchPhrase */
     private $searchPhrase;
-    /** @var string $zipFile */
+    /** @var string|null $zipFile */
     private $zipFile;
     /** @var string|null $exportDriver */
     private $exportDriver;
@@ -54,7 +54,7 @@ class ConfigModel
     /**
      * @return string
      */
-    public function getZipFile(): string
+    public function getZipFile(): ?string
     {
         return $this->zipFile;
     }
@@ -62,7 +62,7 @@ class ConfigModel
     /**
      * @param string $zipFile
      */
-    public function setZipFile(string $zipFile): void
+    public function setZipFile(?string $zipFile): void
     {
         $this->zipFile = $zipFile;
     }

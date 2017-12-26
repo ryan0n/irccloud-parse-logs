@@ -12,6 +12,10 @@ use ryan0n\IrcCloudParseLogs\Model\ {
     ConfigModel,
     LogLineModel
 };
+use ryan0n\IrcCloudParseLogs\Exception\ {
+    ExportDriverNotFoundException,
+    UnparsableZipFileException
+};
 use Exception;
 use ZipArchive;
 
@@ -26,7 +30,8 @@ class IrcCloudParseLogs
 
     /**
      * @param ConfigModel $configModel
-     * @throws Exception
+     * @throws UnparsableZipFileException
+     * @throws ExportDriverNotFoundException
      */
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
@@ -34,13 +39,14 @@ class IrcCloudParseLogs
 
         // Second stage zip file validation
         if (!file_exists($this->configModel->getZipFile())) {
-            throw new Exception("File doesn't exist.");
+            throw new UnparsableZipFileException("File doesn't exist.");
         }
     }
 
     /**
      * @param string $type
      * @return ExportDriverInterface
+     * @throws ExportDriverNotFoundException
      */
     private function exportDriverFactory(string $type): ExportDriverInterface
     {
@@ -55,7 +61,7 @@ class IrcCloudParseLogs
                 return new MySQL();
                 break;
             default:
-                throw new \InvalidArgumentException("Invalid export driver type '{$type}'.");
+                throw new ExportDriverNotFoundException("Invalid export driver type '{$type}'.");
                 break;
         }
     }
@@ -74,14 +80,14 @@ class IrcCloudParseLogs
 
             // Third stage zip file validation
             if (substr_count($filename, '/') !== 2) {
-                throw new Exception('Unexpected zip file structure.');
+                throw new UnparsableZipFileException('Unexpected zip file structure.');
             }
 
             $fp = $zip->getStream($zip->getNameIndex($i));
 
             // Fourth stage zip file validation
             if (!$fp) {
-                throw new Exception('Unknown error reading zip file.');
+                throw new UnparsableZipFileException('Unknown error reading zip file.');
             }
             while (!feof($fp)) {
                 $line = fgets($fp);
@@ -126,7 +132,7 @@ class IrcCloudParseLogs
         $logLine->setNetwork($network);
 
         // set the channel
-        $channel = trim(explode('/', $fileName)[2]);
+        $channel = explode('/', $fileName)[2];
         $channel = str_replace('.txt', '', $channel);
         $logLine->setChannel($channel);
 
