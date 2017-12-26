@@ -21,6 +21,7 @@ class GenericOutput implements ExportDriverInterface
         $output .= "\nnick:       {$logLine->getNick()}";
         $output .= "\nmessage:    {$logLine->getMessage()}";
         $output .= "\nraw:        {$logLine->getRawLine()}";
+        $output .= "\n";
         echo $output;
         return true;
     }

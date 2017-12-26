@@ -4,6 +4,8 @@ namespace ryan0n\IrcCloudParseLogs\Model;
 
 class LogLineModel
 {
+    /* @var string|null $fileName */
+    private $fileName;
     /* @var string|null $rawLine */
     private $rawLine;
     /* @var string|null $dateTime */
@@ -155,5 +157,21 @@ class LogLineModel
     public function setLineNumber(?int $lineNumber): void
     {
         $this->lineNumber = $lineNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string|null $fileName
+     */
+    public function setFileName(?string $fileName)
+    {
+        $this->fileName = $fileName;
     }
 }
