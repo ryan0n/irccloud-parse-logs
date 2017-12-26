@@ -1,9 +1,8 @@
 # irccloud-parse-logs
-A CLI utility written in PHP to parse logs exported from IRC Cloud.
+A CLI utility written in PHP to parse logs exported from IRC Cloud. <br />
 
-Usage examples:
-
-bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json
-bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput
-bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL
-bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump
+Usage examples: <br />
+bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json  <br />
+bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput  <br />
+bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL  <br />
+bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump  <br />
