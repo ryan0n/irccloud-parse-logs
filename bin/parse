@@ -3,7 +3,7 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\Export\ExportDriverFactory;
+use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverFactory;
 use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
 use \Exception;
 

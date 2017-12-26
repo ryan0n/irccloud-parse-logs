@@ -1,6 +1,6 @@
 <?php
 
-namespace ryan0n\IrcCloudParseLogs\Export;
+namespace ryan0n\IrcCloudParseLogs\ExportDriver;
 
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use Exception;

@@ -2,7 +2,7 @@
 
 namespace ryan0n\IrcCloudParseLogs\Utility;
 
-use ryan0n\IrcCloudParseLogs\Export\ExportDriverInterface;
+use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use \Exception;
 use \ZipArchive;
