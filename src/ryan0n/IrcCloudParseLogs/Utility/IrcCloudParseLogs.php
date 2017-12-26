@@ -10,18 +10,23 @@ use \ZipArchive;
 class IrcCloudParseLogs
 {
 
-    /* @var string */
+    /** @var string */
     protected $zipFileName;
 
-    /* @var ExportDriverInterface */
+    /** @var ExportDriverInterface */
     protected $exportDriver;
+
+    /** @var string $searchPhrase */
+    protected $searchPhrase;
 
     public function __construct(
         string $zipFileName,
-        ExportDriverInterface $exportDriver
+        ExportDriverInterface $exportDriver,
+        $searchPhrase = null
     ) {
         $this->zipFileName = $zipFileName;
         $this->exportDriver = $exportDriver;
+        $this->searchPhrase = $searchPhrase;
 
         // Second stage zip file validation
         if (!file_exists($this->zipFileName)) {
@@ -51,15 +56,24 @@ class IrcCloudParseLogs
 
             while (!feof($fp)) {
                 $line = fgets($fp);
-                $logLine = $this->getPopulatedLogLine($filename, $line);
-                $this->exportDriver->export($logLine);
+
+                // If searching for a specific string, boost performance by not processing lines that don't contain it.
+                if (null !== $this->searchPhrase) {
+                    if (false !== stripos($line, $this->searchPhrase)) {
+                        $logLineModel = $this->getPopulatedLogLineModel($filename, $line);
+                        $this->exportDriver->export($logLineModel);
+                    }
+                } else {
+                    $logLineModel = $this->getPopulatedLogLineModel($filename, $line);
+                    $this->exportDriver->export($logLineModel);
+                }
+
             }
             fclose($fp);
         }
     }
 
-
-    private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLineModel
+    private function getPopulatedLogLineModel(string $fileName, string $rawLogLine): LogLineModel
     {
         // Clean up $rawLogLine
         $rawLogLine = rtrim($rawLogLine, "\r\n");

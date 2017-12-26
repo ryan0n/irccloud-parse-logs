@@ -10,20 +10,53 @@ use \Exception;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
+
+    // Extract and verify CLI arguments
+    if (!array_key_exists(1, $argv)) {
+        throw new Exception('No options given. ' . getUsage());
+    }
+    $args = [];
+    foreach ($argv as $arg) {
+        if (preg_match_all("/^\-\-(.*?)\=(.*)$/", $arg, $matches)) {
+            $args[$matches[1][0]] = $matches[2][0];
+        }
+    }
+
     // First stage zip file validation
-    if (!$zipFileName = $argv[1]) {
-        throw new Exception(
-            'No zip file given.'
-            . 'Usage: ./irccloud-parse-logs/bin/parse ./irccloud-export-11111-2017-12-20-15-19-11.zip'
-        );
+    if (array_key_exists('zipFile', $args)) {
+        $zipFileName = $args['zipFile'];
+    } else {
+        throw new Exception('No zip file given. ' . getUsage());
+    }
+
+    // Default to GenericOutput export driver
+    $exportDriver = 'GenericOutput';
+    if (array_key_exists('exportDriver', $args)) {
+        $exportDriver = $args['exportDriver'];
+    }
+
+    // Default to null search phrase
+    $searchPhrase = null;
+    if (array_key_exists('searchPhrase', $args)) {
+        $searchPhrase = $args['searchPhrase'];
     }
 
     $objParser = new IrcCloudParseLogs(
         $zipFileName,
-        ExportDriverFactory::factory('GenericOutput')
+        ExportDriverFactory::factory($exportDriver),
+        $searchPhrase
     );
 
     $objParser->run();
 } catch (Exception $e) {
     echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
+}
+
+function getUsage()
+{
+    return "\n\nUsage examples:\n"
+        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json\n"
+        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
+        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
+        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n\n";
 }

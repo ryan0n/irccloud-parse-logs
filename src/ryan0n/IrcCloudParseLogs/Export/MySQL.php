@@ -25,7 +25,7 @@ class MySQL implements ExportDriverInterface
                 self::DB_PORT
             );
         } catch (Exception $e) {
-            throw new Exception('Could not connect to database configured in ExportMySQL.');
+            throw new Exception('Could not connect to database configured in MySQL export driver.');
         }
 
     }

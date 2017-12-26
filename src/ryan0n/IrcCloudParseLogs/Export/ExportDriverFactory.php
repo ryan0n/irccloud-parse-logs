@@ -6,14 +6,14 @@ class ExportDriverFactory
 {
     public static function factory($type): ExportDriverInterface
     {
-        switch ($type) {
-            case 'GenericOutput':
+        switch (strtolower($type)) {
+            case 'genericoutput':
                 return new GenericOutput();
                 break;
-            case 'Json':
+            case 'json':
                 return new Json();
                 break;
-            case 'MySQL':
+            case 'mysql':
                 return new MySQL();
                 break;
             default:
