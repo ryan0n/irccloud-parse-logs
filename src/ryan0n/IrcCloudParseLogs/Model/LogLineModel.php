@@ -4,22 +4,30 @@ namespace ryan0n\IrcCloudParseLogs\Model;
 
 class LogLineModel
 {
-    /* @var string */
+    /* @var string|null $rawLine */
     private $rawLine;
-    /* @var string */
+    /* @var string|null $dateTime */
     private $dateTime;
-    /* @var string */
+    /* @var string|null $type */
     private $type;
-    /* @var string */
+    /* @var string $network */
     private $network;
-    /* @var string */
+    /* @var string $channel */
     private $channel;
-    /* @var string */
+    /* @var string|null $nick */
     private $nick;
-    /* @var string */
+    /* @var string|null $message */
     private $message;
-    /* @var int */
+    /* @var int|null $lineNumber */
     private $lineNumber;
+
+    /**
+     * @return array
+     */
+    public function toArray(): ?array
+    {
+        return get_object_vars($this);
+    }
 
     /**
      * @return string|null
@@ -86,17 +94,17 @@ class LogLineModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getChannel(): ?string
+    public function getChannel(): string
     {
         return $this->channel;
     }
 
     /**
-     * @param string|null $channel
+     * @param string $channel
      */
-    public function setChannel(?string $channel): void
+    public function setChannel(string $channel): void
     {
         $this->channel = $channel;
     }
@@ -118,27 +126,19 @@ class LogLineModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNetwork(): ?string
+    public function getNetwork(): string
     {
         return $this->network;
     }
 
     /**
-     * @param string|null $network
+     * @param string $network
      */
-    public function setNetwork(?string $network): void
+    public function setNetwork(string $network): void
     {
         $this->network = $network;
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return get_object_vars($this);
     }
 
     /**

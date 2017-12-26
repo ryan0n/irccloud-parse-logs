@@ -4,13 +4,16 @@ namespace ryan0n\IrcCloudParseLogs\Model;
 
 class ConfigModel
 {
-    /** @var string $searchPhrase */
+    /** @var string|null $searchPhrase */
     private $searchPhrase;
     /** @var string $zipFile */
     private $zipFile;
-    /** @var string $exportDriver */
+    /** @var string|null $exportDriver */
     private $exportDriver;
 
+    /**
+     * @param array $options
+     */
     public function __construct(array $options)
     {
         foreach ($options as $option => $value) {
@@ -33,17 +36,17 @@ class ConfigModel
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSearchPhrase()
+    public function getSearchPhrase(): ?string
     {
         return $this->searchPhrase;
     }
 
     /**
-     * @param string $searchPhrase
+     * @param string|null $searchPhrase
      */
-    public function setSearchPhrase($searchPhrase)
+    public function setSearchPhrase(?string $searchPhrase): void
     {
         $this->searchPhrase = $searchPhrase;
     }
@@ -51,7 +54,7 @@ class ConfigModel
     /**
      * @return string
      */
-    public function getZipFile()
+    public function getZipFile(): string
     {
         return $this->zipFile;
     }
@@ -59,23 +62,23 @@ class ConfigModel
     /**
      * @param string $zipFile
      */
-    public function setZipFile($zipFile)
+    public function setZipFile(string $zipFile): void
     {
         $this->zipFile = $zipFile;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getExportDriver()
+    public function getExportDriver(): ?string
     {
         return $this->exportDriver;
     }
 
     /**
-     * @param string $exportDriver
+     * @param string|null $exportDriver
      */
-    public function setExportDriver($exportDriver)
+    public function setExportDriver(?string $exportDriver): void
     {
         $this->exportDriver = $exportDriver;
     }
