@@ -12,12 +12,6 @@ class GenericOutput implements ExportDriverInterface
      */
     public function export(LogLineModel $logLine) : bool
     {
-        // Populate $searchPhrase to only output lines with the search string present
-        $searchPhrase = '';
-        if (!empty($searchPhrase) && false === stripos($logLine->getRawLine(), $searchPhrase)) {
-            return false;
-        }
-
         $output =  "\n--------------------------";
         $output .= "\nlineNumber: " . number_format($logLine->getLineNumber());
         $output .= "\ndateTime:   {$logLine->getDateTime()}";
