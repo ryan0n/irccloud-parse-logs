@@ -24,18 +24,21 @@ try {
 
     // First stage zip file validation
     if (null === $config->getZipFile()) {
-        throw new UnparsableZipFileException('No zip file given. ' . getUsage());
+        throw new UnparsableZipFileException('No zip file given.');
     }
 
     $objParser = new IrcCloudParseLogs($config);
     $objParser->run();
 
 } catch (UnparsableZipFileException $e) {
-    echo "\n" . 'Error occurred parsing zip file: ' . $e->getMessage() . "\n\n";
+    echo "\n" . 'Error occurred parsing zip file: ' . $e->getMessage() . "\n";
+    echo getUsage();
 } catch (ExportDriverNotFoundException $e) {
-    echo "\n" . 'Error occurred initializing export driver: ' . $e->getMessage() . "\n\n";
+    echo "\n" . 'Error occurred initializing export driver: ' . $e->getMessage() . "\n";
+    echo getUsage();
 } catch (Exception $e) {
-    echo "\n" . 'An unknown error occurred: ' . $e->getMessage() . "\n\n";
+    echo "\n" . 'An unknown error occurred: ' . $e->getMessage() . "\n";
+    echo getUsage();
 }
 
 /**
@@ -43,9 +46,9 @@ try {
  */
 function getUsage()
 {
-    return "\n\nUsage examples:\n"
+    return "\nUsage examples:\n"
         . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json\n"
         . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
         . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
-        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n\n";
+        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n";
 }
