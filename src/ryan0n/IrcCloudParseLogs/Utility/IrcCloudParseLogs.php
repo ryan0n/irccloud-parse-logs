@@ -61,30 +61,33 @@ class IrcCloudParseLogs
 
     private function getPopulatedLogLine(string $fileName, string $rawLogLine): LogLineModel
     {
+        // Clean up $rawLogLine
+        $rawLogLine = rtrim($rawLogLine, "\r\n");
+
         // init object
         $logLine = new LogLineModel();
 
-        // raw line
+        // set raw line
         $logLine->setRawLine($rawLogLine);
 
-        // network
+        // set the network
         $network = explode('/', $fileName)[1];
         $network = substr($network, strpos($network, '-') + 1, strlen($network));
         $logLine->setNetwork($network);
 
-        // channel
+        // set the channel
         $channel = trim(explode('/', $fileName)[2]);
         $channel = str_replace('.txt', '', $channel);
         $logLine->setChannel($channel);
 
-        // The date
+        // set the date
         $line = explode(' ', $rawLogLine);
         $logLine->setDateTime(
             substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
         );
         unset($line[0], $line[1]);
 
-        // The rest
+        // set the rest
         if ($line[2][0] === '<') {
             $logLine->setType('message');
             $logLine->setNick(substr($line[2], 1, strlen($line[2]) - 2));

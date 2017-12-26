@@ -20,7 +20,7 @@ try {
 
     $objParser = new IrcCloudParseLogs(
         $zipFileName,
-        ExportDriverFactory::factory('Json')
+        ExportDriverFactory::factory('GenericOutput')
     );
 
     $objParser->run();

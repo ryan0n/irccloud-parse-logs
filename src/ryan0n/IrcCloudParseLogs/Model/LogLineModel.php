@@ -123,7 +123,6 @@ class LogLineModel
      */
     public function setMessage(?string $message): LogLineModel
     {
-        $message = str_replace("\r\n", '', $message);
         $this->message = $message;
         return $this;
     }
