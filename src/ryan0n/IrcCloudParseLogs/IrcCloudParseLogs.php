@@ -20,6 +20,10 @@ class IrcCloudParseLogs
     /** @var ExportDriverInterface */
     protected $exportDriver;
 
+    /**
+     * @param ConfigModel $configModel
+     * @throws Exception
+     */
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
         $this->exportDriver = $this->exportDriverFactory($configModel->getExportDriver());
@@ -30,7 +34,11 @@ class IrcCloudParseLogs
         }
     }
 
-    private function exportDriverFactory($type): ExportDriverInterface
+    /**
+     * @param string $type
+     * @return ExportDriverInterface
+     */
+    private function exportDriverFactory(string $type): ExportDriverInterface
     {
         switch ($type) {
             case 'genericoutput':
@@ -48,6 +56,9 @@ class IrcCloudParseLogs
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function run(): void
     {
         $zip = new ZipArchive;
@@ -89,6 +100,11 @@ class IrcCloudParseLogs
         }
     }
 
+    /**
+     * @param string $fileName
+     * @param string $rawLogLine
+     * @return LogLineModel
+     */
     private function getPopulatedLogLineModel(string $fileName, string $rawLogLine): LogLineModel
     {
         // Clean up $rawLogLine

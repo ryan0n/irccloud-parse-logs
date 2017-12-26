@@ -6,10 +6,8 @@ class ConfigModel
 {
     /** @var string $searchPhrase */
     private $searchPhrase;
-
     /** @var string $zipFile */
     private $zipFile;
-
     /** @var string $exportDriver */
     private $exportDriver;
 

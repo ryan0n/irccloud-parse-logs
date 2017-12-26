@@ -14,6 +14,11 @@ class MySQL implements ExportDriverInterface
     const DB_PASSWORD = '';
     const DB_DATABASE = '';
 
+    /**
+     * @param LogLineModel $logLine
+     * @return bool
+     * @throws Exception
+     */
     public function export(LogLineModel $logLine) : bool
     {
         try {

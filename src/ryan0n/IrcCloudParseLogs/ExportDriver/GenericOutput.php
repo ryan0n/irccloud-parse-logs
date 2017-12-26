@@ -6,6 +6,10 @@ use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
 class GenericOutput implements ExportDriverInterface
 {
+    /**
+     * @param LogLineModel $logLine
+     * @return bool
+     */
     public function export(LogLineModel $logLine) : bool
     {
         // Populate $searchPhrase to only output lines with the search string present
