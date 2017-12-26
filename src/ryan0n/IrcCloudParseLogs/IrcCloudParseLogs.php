@@ -2,12 +2,16 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
-use ryan0n\IrcCloudParseLogs\ExportDriver\GenericOutput;
-use ryan0n\IrcCloudParseLogs\ExportDriver\Json;
-use ryan0n\IrcCloudParseLogs\ExportDriver\MySQL;
-use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
-use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
+use ryan0n\IrcCloudParseLogs\ExportDriver\ {
+    ExportDriverInterface,
+    GenericOutput,
+    Json,
+    MySQL
+};
+use ryan0n\IrcCloudParseLogs\Model\ {
+    ConfigModel,
+    LogLineModel
+};
 use Exception;
 use ZipArchive;
 
