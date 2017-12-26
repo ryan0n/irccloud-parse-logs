@@ -71,18 +71,23 @@ class IrcCloudParseLogs
         $zip = new ZipArchive;
         $zip->open($this->configModel->getZipFile());
 
+        // zip file validation
+        if ($zip->numFiles === 0) {
+            throw new UnparsableZipFileException('Unexpected zip file structure.');
+        }
+
         $logLineCount = 0;
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
 
-            // Third stage zip file validation
+            // zip file validation
             if (substr_count($filename, '/') !== 2) {
                 throw new UnparsableZipFileException('Unexpected zip file structure.');
             }
 
             $fp = $zip->getStream($zip->getNameIndex($i));
 
-            // Fourth stage zip file validation
+            // zip file validation
             if (!$fp) {
                 throw new UnparsableZipFileException('Unknown error reading zip file.');
             }

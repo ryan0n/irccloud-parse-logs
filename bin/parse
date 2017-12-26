@@ -22,7 +22,7 @@ try {
     }
     $config = new ConfigModel($options);
 
-    // First stage zip file validation
+    // zip file validation
     if (null === $config->getZipFile()) {
         throw new UnparsableZipFileException('No zip file given.');
     }
