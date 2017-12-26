@@ -9,21 +9,21 @@ use Exception;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    // Process command line arguments
+    // Process command line options
     $options = [];
     foreach ($argv as $arg) {
         if (preg_match_all("/^\-\-(.*?)\=(.*)$/", $arg, $matches)) {
             $options[$matches[1][0]] = $matches[2][0];
         }
     }
-    $options = new ConfigModel($options);
+    $config = new ConfigModel($options);
 
     // First stage zip file validation
-    if (empty($options->getZipFile())) {
+    if (empty($config->getZipFile())) {
         throw new Exception('No zip file given. ' . getUsage());
     }
 
-    $objParser = new IrcCloudParseLogs($options);
+    $objParser = new IrcCloudParseLogs($config);
     $objParser->run();
 
 } catch (Exception $e) {

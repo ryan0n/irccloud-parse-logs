@@ -15,17 +15,17 @@ class IrcCloudParseLogs
 {
 
     /** @var ConfigModel */
-    protected $cliOptionsModel;
+    protected $configModel;
 
     /** @var ExportDriverInterface */
     protected $exportDriver;
 
-    public function __construct(ConfigModel $cliOptionsModel) {
-        $this->cliOptionsModel = $cliOptionsModel;
-        $this->exportDriver = $this->exportDriverFactory($cliOptionsModel->getExportDriver());
+    public function __construct(ConfigModel $configModel) {
+        $this->configModel = $configModel;
+        $this->exportDriver = $this->exportDriverFactory($configModel->getExportDriver());
 
         // Second stage zip file validation
-        if (!file_exists($this->cliOptionsModel->getZipFile())) {
+        if (!file_exists($this->configModel->getZipFile())) {
             throw new Exception("File doesn't exist.");
         }
     }
@@ -51,7 +51,7 @@ class IrcCloudParseLogs
     public function run(): void
     {
         $zip = new ZipArchive;
-        $zip->open($this->cliOptionsModel->getZipFile());
+        $zip->open($this->configModel->getZipFile());
 
         $logLineCount = 0;
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -72,8 +72,8 @@ class IrcCloudParseLogs
                 $line = fgets($fp);
                 $logLineCount++;
                 // If searching for a specific string, boost performance by not processing lines that don't contain it.
-                if (null !== $this->cliOptionsModel->getSearchPhrase()) {
-                    if (false !== stripos($line, $this->cliOptionsModel->getSearchPhrase())) {
+                if (null !== $this->configModel->getSearchPhrase()) {
+                    if (false !== stripos($line, $this->configModel->getSearchPhrase())) {
                         $logLineModel = $this->getPopulatedLogLineModel($filename, $line);
                         $logLineModel->setLineNumber($logLineCount);
                         $this->exportDriver->export($logLineModel);
