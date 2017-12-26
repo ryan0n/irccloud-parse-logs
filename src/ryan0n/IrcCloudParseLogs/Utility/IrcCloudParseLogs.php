@@ -3,42 +3,57 @@
 namespace ryan0n\IrcCloudParseLogs\Utility;
 
 use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
+use ryan0n\IrcCloudParseLogs\ExportDriver\GenericOutput;
+use ryan0n\IrcCloudParseLogs\ExportDriver\Json;
+use ryan0n\IrcCloudParseLogs\ExportDriver\MySQL;
+use ryan0n\IrcCloudParseLogs\Model\CliOptionsModel;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
-use \Exception;
-use \ZipArchive;
+use Exception;
+use ZipArchive;
 
 class IrcCloudParseLogs
 {
 
-    /** @var string */
-    protected $zipFileName;
+    /** @var CliOptionsModel */
+    protected $cliOptionsModel;
 
     /** @var ExportDriverInterface */
     protected $exportDriver;
 
-    /** @var string|null $searchPhrase */
-    protected $searchPhrase;
-
-    public function __construct(
-        string $zipFileName,
-        ExportDriverInterface $exportDriver,
-        ?string $searchPhrase = null
-    ) {
-        $this->zipFileName = $zipFileName;
-        $this->exportDriver = $exportDriver;
-        $this->searchPhrase = $searchPhrase;
+    public function __construct(CliOptionsModel $cliOptionsModel) {
+        $this->cliOptionsModel = $cliOptionsModel;
+        $this->exportDriver = $this->exportDriverFactory($cliOptionsModel->getExportDriver());
 
         // Second stage zip file validation
-        if (!file_exists($this->zipFileName)) {
+        if (!file_exists($this->cliOptionsModel->getZipFile())) {
             throw new Exception("File doesn't exist.");
+        }
+    }
+
+    private function exportDriverFactory($type): ExportDriverInterface
+    {
+        switch ($type) {
+            case 'genericoutput':
+                return new GenericOutput();
+                break;
+            case 'json';
+                return new Json();
+                break;
+            case 'mysql':
+                return new MySQL();
+                break;
+            default:
+                throw new \InvalidArgumentException("Invalid export driver type '{$type}'.");
+                break;
         }
     }
 
     public function run(): void
     {
         $zip = new ZipArchive;
-        $zip->open($this->zipFileName);
+        $zip->open($this->cliOptionsModel->getZipFile());
 
+        $logLineCount = 0;
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
 
@@ -53,18 +68,19 @@ class IrcCloudParseLogs
             if (!$fp) {
                 throw new Exception('Unknown error reading zip file.');
             }
-
             while (!feof($fp)) {
                 $line = fgets($fp);
-
+                $logLineCount++;
                 // If searching for a specific string, boost performance by not processing lines that don't contain it.
-                if (null !== $this->searchPhrase) {
-                    if (false !== stripos($line, $this->searchPhrase)) {
+                if (null !== $this->cliOptionsModel->getSearchPhrase()) {
+                    if (false !== stripos($line, $this->cliOptionsModel->getSearchPhrase())) {
                         $logLineModel = $this->getPopulatedLogLineModel($filename, $line);
+                        $logLineModel->setLineNumber($logLineCount);
                         $this->exportDriver->export($logLineModel);
                     }
                 } else {
                     $logLineModel = $this->getPopulatedLogLineModel($filename, $line);
+                    $logLineModel->setLineNumber($logLineCount);
                     $this->exportDriver->export($logLineModel);
                 }
 

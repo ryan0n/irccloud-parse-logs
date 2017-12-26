@@ -3,55 +3,37 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverFactory;
+use ryan0n\IrcCloudParseLogs\Model\CliOptionsModel;
 use ryan0n\IrcCloudParseLogs\Utility\IrcCloudParseLogs;
-use \Exception;
+use Exception;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-
-    // Extract and verify CLI arguments
-    if (!array_key_exists(1, $argv)) {
-        throw new Exception('No options given. ' . getUsage());
-    }
-    $args = [];
+    // Process command line arguments
+    $options = [];
     foreach ($argv as $arg) {
         if (preg_match_all("/^\-\-(.*?)\=(.*)$/", $arg, $matches)) {
-            $args[$matches[1][0]] = $matches[2][0];
+            $options[$matches[1][0]] = $matches[2][0];
         }
     }
+    $options = new CliOptionsModel($options);
 
     // First stage zip file validation
-    if (array_key_exists('zipFile', $args)) {
-        $zipFileName = $args['zipFile'];
-    } else {
+    if (empty($options->getZipFile())) {
         throw new Exception('No zip file given. ' . getUsage());
     }
 
-    // Default to GenericOutput export driver
-    $exportDriver = 'GenericOutput';
-    if (array_key_exists('exportDriver', $args)) {
-        $exportDriver = $args['exportDriver'];
-    }
-
-    // Default to null search phrase
-    $searchPhrase = null;
-    if (array_key_exists('searchPhrase', $args)) {
-        $searchPhrase = $args['searchPhrase'];
-    }
-
-    $objParser = new IrcCloudParseLogs(
-        $zipFileName,
-        ExportDriverFactory::factory($exportDriver),
-        $searchPhrase
-    );
+    $objParser = new IrcCloudParseLogs($options);
 
     $objParser->run();
 } catch (Exception $e) {
     echo "\n" . 'Error happened processing zip file: ' . $e->getMessage() . "\n\n";
 }
 
+/**
+ * @return string
+ */
 function getUsage()
 {
     return "\n\nUsage examples:\n"

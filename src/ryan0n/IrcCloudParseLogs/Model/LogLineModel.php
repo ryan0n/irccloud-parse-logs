@@ -18,6 +18,8 @@ class LogLineModel
     private $nick;
     /* @var string */
     private $message;
+    /* @var int */
+    private $lineNumber;
 
     /**
      * @return string|null
@@ -151,5 +153,23 @@ class LogLineModel
     public function toArray(): array
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function getLineNumber(): int
+    {
+        return $this->lineNumber;
+    }
+
+    /**
+     * @param int $lineNumber
+     * @return LogLineModel
+     */
+    public function setLineNumber(int $lineNumber): LogLineModel
+    {
+        $this->lineNumber = $lineNumber;
+        return $this;
     }
 }

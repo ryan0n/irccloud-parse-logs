@@ -15,13 +15,14 @@ class GenericOutput implements ExportDriverInterface
         }
 
         $output =  "\n--------------------------";
-        $output .= "\ndateTime: {$logLine->getDateTime()}";
-        $output .= "\ntype:     {$logLine->getType()}";
-        $output .= "\nnetwork:  {$logLine->getNetwork()}";
-        $output .= "\nchannel:  {$logLine->getChannel()}";
-        $output .= "\nnick:     {$logLine->getNick()}";
-        $output .= "\nmessage:  {$logLine->getMessage()}";
-        $output .= "\nraw:      {$logLine->getRawLine()}";
+        $output .= "\nlineNumber: " . number_format($logLine->getLineNumber());
+        $output .= "\ndateTime:   {$logLine->getDateTime()}";
+        $output .= "\ntype:       {$logLine->getType()}";
+        $output .= "\nnetwork:    {$logLine->getNetwork()}";
+        $output .= "\nchannel:    {$logLine->getChannel()}";
+        $output .= "\nnick:       {$logLine->getNick()}";
+        $output .= "\nmessage:    {$logLine->getMessage()}";
+        $output .= "\nraw:        {$logLine->getRawLine()}";
         echo $output;
         return true;
     }
