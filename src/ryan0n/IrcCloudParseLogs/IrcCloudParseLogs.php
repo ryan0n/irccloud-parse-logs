@@ -14,10 +14,10 @@ use ZipArchive;
 class IrcCloudParseLogs
 {
 
-    /** @var ConfigModel */
+    /** @var ConfigModel $configModel */
     protected $configModel;
 
-    /** @var ExportDriverInterface */
+    /** @var ExportDriverInterface $exportDriver */
     protected $exportDriver;
 
     /**
