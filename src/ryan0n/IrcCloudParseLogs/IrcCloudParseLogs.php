@@ -29,6 +29,7 @@ class IrcCloudParseLogs
     /**
      * @param ConfigModel $configModel
      * @throws UnparsableZipFileException
+     * @throws ExportDriverNotFoundException
      */
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
@@ -71,7 +72,6 @@ class IrcCloudParseLogs
         $zip = new ZipArchive;
         $zip->open($this->configModel->getZipFile());
 
-        // zip file validation
         if ($zip->numFiles === 0) {
             throw new UnparsableZipFileException('Unexpected zip file structure.');
         }
@@ -94,6 +94,7 @@ class IrcCloudParseLogs
                 $logLineCount++;
 
                 if (!$this->configModel->getSearchPhrase()) {
+                    // Not in search mode. Processing all lines.
                     $shouldProcessLine = true;
                 } elseif (false !== stripos($rawLine, $this->configModel->getSearchPhrase())) {
                     // In search mode. Boost performance by not processing lines that don't contain search phrase.
@@ -138,20 +139,18 @@ class IrcCloudParseLogs
 
         // set the date
         $line = explode(' ', $logLineModel->getRawLine());
-        $logLineModel->setDateTime(
-            substr(implode(' ', [$line[0], $line[1]]), 1, strlen(implode(' ', [$line[0], $line[1]])) - 2)
-        );
+        $logLineModel->setDateTime(substr($line[0] . ' ' . $line[1], 1, -1));
         unset($line[0], $line[1]);
 
         // set the rest
         if ($line[2][0] === '<') {
             $logLineModel->setType('message');
-            $logLineModel->setNick(substr($line[2], 1, strlen($line[2]) - 2));
+            $logLineModel->setNick(substr($line[2], 1, -2));
             unset($line[2]);
             $logLineModel->setMessage(implode(' ', $line));
         } elseif (trim($line[2]) === '—') {
             $logLineModel->setType('message');
-            $logLineModel->setNick(substr($line[3], 1, strlen($line[3]) - 2));
+            $logLineModel->setNick(substr($line[3], 1, -2));
             unset($line[2], $line[3]);
             $logLineModel->setMessage(implode(' ', $line));
         } else {
