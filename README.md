@@ -6,3 +6,4 @@ bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json  <br />
 bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput  <br />
 bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL  <br />
 bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump  <br />
+bin/parse --zipfile=./irccloud-export.zip --exportdriver=genericoutput --searchphrase="donald trump"  <br />
