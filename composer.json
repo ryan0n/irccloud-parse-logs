@@ -1,0 +1,13 @@
+{
+    "name": "ryan0n/irccloud-parse-logs",
+    "authors": [
+        {
+            "name": "Ryan Wright",
+            "email": "rywright@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": { "": "src/" }
+    }
+}

@@ -30,7 +30,7 @@ class ConfigModel
                     break;
             }
         }
-        if (null === $this->exportDriver) {
+        if (empty($this->exportDriver)) {
             $this->exportDriver = 'genericoutput';
         }
     }
