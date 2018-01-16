@@ -2,20 +2,14 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
-use ryan0n\IrcCloudParseLogs\Exception\ {
-    ExportDriverNotFoundException,
-    UnparsableZipFileException
-};
-use ryan0n\IrcCloudParseLogs\ExportDriver\ {
-    ExportDriverInterface,
-    GenericOutput,
-    Json,
-    MySQL
-};
-use ryan0n\IrcCloudParseLogs\Model\ {
-    ConfigModel,
-    LogLineModel
-};
+use ryan0n\IrcCloudParseLogs\Exception\ExportDriverNotFoundException;
+use ryan0n\IrcCloudParseLogs\Exception\UnparsableZipFileException;
+use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
+use ryan0n\IrcCloudParseLogs\ExportDriver\GenericOutput;
+use ryan0n\IrcCloudParseLogs\ExportDriver\Json;
+use ryan0n\IrcCloudParseLogs\ExportDriver\MySQL;
+use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
+use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use ZipArchive;
 
 class IrcCloudParseLogs

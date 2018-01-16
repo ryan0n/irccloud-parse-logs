@@ -1,14 +1,9 @@
-#!/usr/bin/env php
 <?php
 
-namespace ryan0n\IrcCloudParseLogs;
-
-use ryan0n\IrcCloudParseLogs\Exception\ {
-    ExportDriverNotFoundException,
-    UnparsableZipFileException
-};
+use ryan0n\IrcCloudParseLogs\Exception\ExportDriverNotFoundException;
+use ryan0n\IrcCloudParseLogs\Exception\UnparsableZipFileException;
+use ryan0n\IrcCloudParseLogs\IrcCloudParseLogs;
 use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
-use Exception;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -46,8 +41,8 @@ try {
 function getUsage()
 {
     return "\nUsage examples:\n"
-        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=Json\n"
-        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
-        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
-        . "bin/parse --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n";
+        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=Json\n"
+        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
+        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
+        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n";
 }
