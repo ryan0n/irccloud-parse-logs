@@ -11,9 +11,6 @@ class ConfigModel
     /** @var string|null $exportDriver */
     private $exportDriver;
 
-    /**
-     * @param array $options
-     */
     public function __construct(array $options)
     {
         foreach ($options as $option => $value) {
@@ -35,49 +32,31 @@ class ConfigModel
         }
     }
 
-    /**
-     * @return string|null
-     */
     public function getSearchPhrase(): ?string
     {
         return $this->searchPhrase;
     }
 
-    /**
-     * @param string|null $searchPhrase
-     */
     public function setSearchPhrase(?string $searchPhrase): void
     {
         $this->searchPhrase = $searchPhrase;
     }
 
-    /**
-     * @return string
-     */
     public function getZipFile(): ?string
     {
         return $this->zipFile;
     }
 
-    /**
-     * @param string $zipFile
-     */
     public function setZipFile(?string $zipFile): void
     {
         $this->zipFile = $zipFile;
     }
 
-    /**
-     * @return string|null
-     */
     public function getExportDriver(): ?string
     {
         return $this->exportDriver;
     }
 
-    /**
-     * @param string|null $exportDriver
-     */
     public function setExportDriver(?string $exportDriver): void
     {
         $this->exportDriver = $exportDriver;

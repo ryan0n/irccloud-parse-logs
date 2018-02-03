@@ -1,5 +1,6 @@
 <?php
 
+use ryan0n\IrcCloudParseLogs\Exception\ExportDriverException;
 use ryan0n\IrcCloudParseLogs\Exception\ExportDriverNotFoundException;
 use ryan0n\IrcCloudParseLogs\Exception\UnparsableZipFileException;
 use ryan0n\IrcCloudParseLogs\IrcCloudParseLogs;
@@ -25,24 +26,26 @@ try {
     $objParser->run();
 
 } catch (UnparsableZipFileException $e) {
-    echo "\n" . 'Error occurred parsing zip file: ' . $e->getMessage() . "\n";
-    echo getUsage();
+    echo getUsage('Error occurred parsing zip file: ' . $e->getMessage());
 } catch (ExportDriverNotFoundException $e) {
-    echo "\n" . 'Error occurred initializing export driver: ' . $e->getMessage() . "\n";
-    echo getUsage();
+    echo getUsage('Error occurred initializing export driver: ' . $e->getMessage());
+} catch (ExportDriverException $e) {
+    echo getUsage('Error occurred in export driver: ' . $e->getMessage());
 } catch (Exception $e) {
-    echo "\n" . 'An unknown error occurred: ' . $e->getMessage() . "\n";
-    echo getUsage();
+    echo getUsage('An unknown error occurred: ' . $e->getMessage());
 }
 
-/**
- * @return string
- */
-function getUsage()
+function getUsage(string $additionalOutput = null) : string
 {
-    return "\nUsage examples:\n"
+    $output = "\n";
+    if (!empty($additionalOutput)) {
+        $output .= $additionalOutput . "\n";
+    }
+    $output .= "\nUsage examples:\n"
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=Json\n"
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
-        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n";
+        . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n"
+        . "bin/parse --zipfile=./irccloud-export.zip --exportdriver=genericoutput --searchphrase=\"donald trump\"\n";
+    return $output;
 }

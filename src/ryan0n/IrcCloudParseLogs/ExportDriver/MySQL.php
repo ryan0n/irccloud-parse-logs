@@ -2,6 +2,7 @@
 
 namespace ryan0n\IrcCloudParseLogs\ExportDriver;
 
+use ryan0n\IrcCloudParseLogs\Exception\ExportDriverException;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use Exception;
 use mysqli;
@@ -14,11 +15,6 @@ class MySQL implements ExportDriverInterface
     const DB_PASSWORD = '';
     const DB_DATABASE = '';
 
-    /**
-     * @param LogLineModel $logLine
-     * @return bool
-     * @throws Exception
-     */
     public function export(LogLineModel $logLine) : bool
     {
         try {
@@ -30,7 +26,7 @@ class MySQL implements ExportDriverInterface
                 self::DB_PORT
             );
         } catch (Exception $e) {
-            throw new Exception('Could not connect to database configured in MySQL export driver.');
+            throw new ExportDriverException('Could not connect to database configured in MySQL export driver.');
         }
 
     }
