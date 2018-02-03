@@ -46,6 +46,6 @@ function getUsage(string $additionalOutput = null) : string
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput\n"
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=MySQL\n"
         . "php bin/parse.php --zipFile=./irccloud-export.zip --exportDriver=GenericOutput --searchPhrase=trump\n"
-        . "bin/parse --zipfile=./irccloud-export.zip --exportdriver=genericoutput --searchphrase=\"donald trump\"\n";
+        . "php bin/parse.php --zipfile=./irccloud-export.zip --exportdriver=genericoutput --searchphrase=\"donald trump\"\n";
     return $output;
 }
