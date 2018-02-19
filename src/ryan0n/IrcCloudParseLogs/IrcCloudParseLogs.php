@@ -20,6 +20,12 @@ class IrcCloudParseLogs
     /** @var ExportDriverInterface $exportDriver */
     protected $exportDriver;
 
+    /** @var int $uncompressedZipSizeTotal */
+    protected $uncompressedZipSizeTotal;
+
+    /** @var int $uncompressedZizSizeProgress */
+    protected $uncompressedZizSizeProgress;
+
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
         $this->exportDriver = $this->exportDriverFactory($configModel->getExportDriver());
@@ -50,6 +56,8 @@ class IrcCloudParseLogs
 
     public function run(): void
     {
+        $originalZipSize = $this->getZipOriginalSize($this->configModel->getZipFile());
+
         $zip = new ZipArchive;
         $zip->open($this->configModel->getZipFile());
 
@@ -69,8 +77,14 @@ class IrcCloudParseLogs
                 throw new UnparsableZipFileException('Unknown error reading zip file.');
             }
 
+
             while (!feof($fp)) {
                 $rawLine = fgets($fp);
+                $this->uncompressedZizSizeProgress += mb_strlen($rawLine, '8bit');
+                if ($logLineCount % 30000 === 0) {
+                    $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
+                }
+
                 $shouldProcessLine = false;
                 $logLineCount++;
 
@@ -150,5 +164,69 @@ class IrcCloudParseLogs
         }
 
         return $logLineModel;
+    }
+
+    private function getZipOriginalSize(string $filename): int
+    {
+        if (empty($this->uncompressedZipSizeTotal)) {
+            $size = 0;
+            $resource = zip_open($filename);
+            while ($dir_resource = zip_read($resource)) {
+                $size += zip_entry_filesize($dir_resource);
+            }
+            zip_close($resource);
+            $this->uncompressedZipSizeTotal = $size;
+        }
+        return $this->uncompressedZipSizeTotal;
+    }
+
+    protected function showStatus($done, $total, $size=30) {
+
+        static $start_time;
+
+        // if we go over our bound, just ignore it
+        if ($done > $total) {
+            return;
+        }
+
+        if( empty($start_time)) {
+            $start_time=time();
+        }
+        $now = time();
+
+        $perc = (double)($done/$total);
+
+        $bar = floor($perc*$size);
+
+        $status_bar = "\r[";
+        $status_bar .= str_repeat("=", $bar);
+        if($bar<$size){
+            $status_bar .= ">";
+            $status_bar .= str_repeat(" ", $size-$bar);
+        } else {
+            $status_bar .= "=";
+        }
+
+        $disp = number_format($perc*100, 0, '.', ',');
+
+        $status_bar .= "] $disp%  ".number_format($done)."/".number_format($total) . " bytes";
+
+        $rate = ($now - $start_time) / $done;
+        $left = $total - $done;
+        $eta = round($rate * $left, 2);
+
+        $elapsed = $now - $start_time;
+
+        $status_bar.= " remaining: ".number_format($eta)." sec.  elapsed: ".number_format($elapsed)." sec.";
+
+        echo "$status_bar  ";
+
+        flush();
+
+        // when done, send a newline
+        if ($done === $total) {
+            echo "\n";
+        }
+
     }
 }
