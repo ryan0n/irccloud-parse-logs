@@ -91,7 +91,7 @@ class IrcCloudParseLogs
                 if (!$this->configModel->getSearchPhrase()) {
                     // Not in search mode. Processing all lines.
                     $shouldProcessLine = true;
-                } elseif (false !== stripos($rawLine, $this->configModel->getSearchPhrase())) {
+                } elseif (false !== strpos($rawLine, $this->configModel->getSearchPhrase())) {
                     // In search mode. Boost performance by not processing lines that don't contain search phrase.
                     $shouldProcessLine = true;
                 }
