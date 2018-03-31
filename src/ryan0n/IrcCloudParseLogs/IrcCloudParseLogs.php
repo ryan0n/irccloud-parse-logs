@@ -2,6 +2,8 @@
 
 namespace ryan0n\IrcCloudParseLogs;
 
+ini_set("memory_limit", "8G");
+
 use ryan0n\IrcCloudParseLogs\Exception\ExportDriverNotFoundException;
 use ryan0n\IrcCloudParseLogs\Exception\UnparsableZipFileException;
 use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
@@ -71,42 +73,52 @@ class IrcCloudParseLogs
             if (substr_count($filename, '/') !== 2) {
                 throw new UnparsableZipFileException('Unexpected zip file structure.');
             }
+            $contents = file_get_contents("zip://{$this->configModel->getZipFile()}#{$zip->getNameIndex($i)}");
 
-            $fp = $zip->getStream($zip->getNameIndex($i));
-            if (!$fp) {
-                throw new UnparsableZipFileException('Unknown error reading zip file.');
+            $shouldProcessFile = false;
+            if (!$this->configModel->getSearchPhrase()) {
+                // Not in search mode. Processing all lines.
+                $shouldProcessFile = true;
+            } elseif (false !== strpos($contents, $this->configModel->getSearchPhrase())) {
+                // In search mode. Boost performance by not processing lines that don't contain search phrase.
+                $shouldProcessFile = true;
             }
 
+            if (!$shouldProcessFile) {
+                $this->uncompressedZizSizeProgress += mb_strlen($contents, '8bit');
+                $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
+            } else {
+                $rawLine = strtok($contents, "\n");
+                while ($rawLine !== false) {
 
-            while (!feof($fp)) {
-                $rawLine = fgets($fp);
-                $this->uncompressedZizSizeProgress += mb_strlen($rawLine, '8bit');
-                if ($logLineCount % 30000 === 0) {
-                    $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
-                }
+                    $this->uncompressedZizSizeProgress += mb_strlen($rawLine, '8bit');
+                    if ($logLineCount % 30000 === 0) {
+                        $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
+                    }
 
-                $shouldProcessLine = false;
-                $logLineCount++;
+                    $shouldProcessLine = false;
+                    $logLineCount++;
 
-                if (!$this->configModel->getSearchPhrase()) {
-                    // Not in search mode. Processing all lines.
-                    $shouldProcessLine = true;
-                } elseif (false !== strpos($rawLine, $this->configModel->getSearchPhrase())) {
-                    // In search mode. Boost performance by not processing lines that don't contain search phrase.
-                    $shouldProcessLine = true;
-                }
+                    if (!$this->configModel->getSearchPhrase()) {
+                        // Not in search mode. Processing all lines.
+                        $shouldProcessLine = true;
+                    } elseif (false !== strpos($rawLine, $this->configModel->getSearchPhrase())) {
+                        // In search mode. Boost performance by not processing lines that don't contain search phrase.
+                        $shouldProcessLine = true;
+                    }
 
-                if ($shouldProcessLine) {
-                    $logLineModel = new LogLineModel();
-                    $logLineModel->setFileName($filename);
-                    $logLineModel->setRawLine($rawLine);
-                    $logLineModel->setLineNumber($logLineCount);
-                    $logLineModel = $this->populateLogLineModel($logLineModel);
+                    if ($shouldProcessLine) {
+                        $logLineModel = new LogLineModel();
+                        $logLineModel->setFileName($filename);
+                        $logLineModel->setRawLine($rawLine);
+                        $logLineModel->setLineNumber($logLineCount);
+                        $logLineModel = $this->populateLogLineModel($logLineModel);
 
-                    $this->exportDriver->export($logLineModel);
+                        $this->exportDriver->export($logLineModel);
+                    }
+                    $rawLine = strtok("\n");
                 }
             }
-            fclose($fp);
         }
     }
 
