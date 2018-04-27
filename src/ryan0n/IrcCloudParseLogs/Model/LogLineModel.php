@@ -2,13 +2,15 @@
 
 namespace ryan0n\IrcCloudParseLogs\Model;
 
+use DateTime;
+
 class LogLineModel
 {
     /* @var string|null $fileName */
     private $fileName;
     /* @var string|null $rawLine */
     private $rawLine;
-    /* @var string|null $dateTime */
+    /* @var DateTime|null $dateTime */
     private $dateTime;
     /* @var string|null $type */
     private $type;
@@ -38,12 +40,12 @@ class LogLineModel
         $this->rawLine = $rawLine;
     }
 
-    public function getDateTime(): ?string
+    public function getDateTime(): ?DateTime
     {
         return $this->dateTime;
     }
 
-    public function setDateTime(?string $dateTime): void
+    public function setDateTime(?DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }

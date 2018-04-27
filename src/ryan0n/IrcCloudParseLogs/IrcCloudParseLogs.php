@@ -144,7 +144,18 @@ class IrcCloudParseLogs
                         $logLineModelsQueue[] = $logLineModel;
 
                         foreach ($logLineModelsQueue as $logLineModel) {
-                            $this->exportDriver->export($this->populateLogLineModel($logLineModel));
+                            $logLineModel = $this->populateLogLineModel($logLineModel);
+
+                            if (null === $this->configModel->getDate()) {
+
+                                $this->exportDriver->export($logLineModel);
+
+                            } else {
+                                if ($this->configModel->getDate() === $logLineModel->getDateTime()->format('Y-m-d')) {
+                                    $this->exportDriver->export($logLineModel);
+                                }
+
+                            }
                         }
                         $logLineModelsQueue = [];
 
@@ -174,7 +185,7 @@ class IrcCloudParseLogs
 
         // set the date
         $line = explode(' ', $logLineModel->getRawLine());
-        $logLineModel->setDateTime(substr($line[0] . ' ' . $line[1], 1, -1));
+        $logLineModel->setDateTime(new \DateTime(substr($line[0] . ' ' . $line[1], 1, -1)));
         unset($line[0], $line[1]);
 
         // set the rest

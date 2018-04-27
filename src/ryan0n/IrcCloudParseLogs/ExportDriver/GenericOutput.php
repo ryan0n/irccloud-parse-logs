@@ -10,7 +10,7 @@ class GenericOutput implements ExportDriverInterface
     {
         $output =  "\n--------------------------";
         $output .= "\nlineNumber: " . number_format($logLine->getLineNumber());
-        $output .= "\ndateTime:   {$logLine->getDateTime()}";
+        $output .= "\ndateTime:   {$logLine->getDateTime()->format('Y-m-d H:i:s')}";
         $output .= "\ntype:       {$logLine->getType()}";
         $output .= "\nnetwork:    {$logLine->getNetwork()}";
         $output .= "\nchannel:    {$logLine->getChannel()}";

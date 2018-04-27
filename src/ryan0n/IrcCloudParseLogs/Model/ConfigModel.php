@@ -12,6 +12,8 @@ class ConfigModel
     private $exportDriver;
     /** @var int|null $contextLines */
     private $contextLines;
+    /** @var int|null $date */
+    private $date;
 
     public function __construct(array $options)
     {
@@ -28,15 +30,15 @@ class ConfigModel
                     $this->exportDriver = strtolower($value);
                     break;
                 case 'contextlines':
-                    $this->contextLines = strtolower($value);
+                    $this->contextLines = $value;
+                    break;
+                case 'date':
+                    $this->date = $value;
                     break;
             }
         }
         if (empty($this->exportDriver)) {
             $this->exportDriver = 'genericoutput';
-        }
-        if (empty($this->contextLines)) {
-            $this->contextLines = 0;
         }
     }
 
@@ -79,4 +81,16 @@ class ConfigModel
     {
         $this->contextLines = $contextLines;
     }
+
+    public function getDate(): ?string
+    {
+        return $this->date;
+    }
+
+    public function setDate(?int $date): void
+    {
+        $this->date = $date;
+    }
+
+
 }
