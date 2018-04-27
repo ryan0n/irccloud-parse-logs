@@ -28,6 +28,10 @@ class IrcCloudParseLogs
     /** @var int $uncompressedZizSizeProgress */
     protected $uncompressedZizSizeProgress;
 
+    /**
+     * @param ConfigModel $configModel
+     * @throws UnparsableZipFileException
+     */
     public function __construct(ConfigModel $configModel) {
         $this->configModel = $configModel;
         $this->exportDriver = $this->exportDriverFactory($configModel->getExportDriver());
@@ -38,6 +42,11 @@ class IrcCloudParseLogs
         }
     }
 
+    /**
+     * @param string $type
+     * @return ExportDriverInterface
+     * @throws ExportDriverNotFoundException
+     */
     private function exportDriverFactory(string $type): ExportDriverInterface
     {
         switch ($type) {
@@ -56,6 +65,9 @@ class IrcCloudParseLogs
         }
     }
 
+    /**
+     * @throws UnparsableZipFileException
+     */
     public function run(): void
     {
         $originalZipSize = $this->getZipOriginalSize($this->configModel->getZipFile());
@@ -68,6 +80,7 @@ class IrcCloudParseLogs
         }
 
         $logLineCount = 0;
+        $logLineModelsQueue = [];
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
             if (substr_count($filename, '/') !== 2) {
@@ -99,6 +112,21 @@ class IrcCloudParseLogs
                     $shouldProcessLine = false;
                     $logLineCount++;
 
+                    if (null !== $this->configModel->getContextLines()) {
+                        $logLineModel = new LogLineModel();
+                        $logLineModel->setFileName($filename);
+                        $logLineModel->setRawLine($rawLine);
+                        $logLineModel->setLineNumber($logLineCount);
+                        $logLineModelsQueue[] = $logLineModel;
+
+                        $sliceBegin = \count($logLineModelsQueue) - $this->configModel->getContextLines();
+                        $logLineModelsQueue = \array_slice(
+                            $logLineModelsQueue,
+                            ($sliceBegin <= 0) ? 0 : $sliceBegin,
+                            \count($logLineModelsQueue)
+                        );
+                    }
+
                     if (!$this->configModel->getSearchPhrase()) {
                         // Not in search mode. Processing all lines.
                         $shouldProcessLine = true;
@@ -112,9 +140,14 @@ class IrcCloudParseLogs
                         $logLineModel->setFileName($filename);
                         $logLineModel->setRawLine($rawLine);
                         $logLineModel->setLineNumber($logLineCount);
-                        $logLineModel = $this->populateLogLineModel($logLineModel);
 
-                        $this->exportDriver->export($logLineModel);
+                        $logLineModelsQueue[] = $logLineModel;
+
+                        foreach ($logLineModelsQueue as $logLineModel) {
+                            $this->exportDriver->export($this->populateLogLineModel($logLineModel));
+                        }
+                        $logLineModelsQueue = [];
+
                     }
                     $rawLine = strtok("\n");
                 }

@@ -10,6 +10,8 @@ class ConfigModel
     private $zipFile;
     /** @var string|null $exportDriver */
     private $exportDriver;
+    /** @var int|null $contextLines */
+    private $contextLines;
 
     public function __construct(array $options)
     {
@@ -25,10 +27,16 @@ class ConfigModel
                 case 'exportdriver':
                     $this->exportDriver = strtolower($value);
                     break;
+                case 'contextlines':
+                    $this->contextLines = strtolower($value);
+                    break;
             }
         }
         if (empty($this->exportDriver)) {
             $this->exportDriver = 'genericoutput';
+        }
+        if (empty($this->contextLines)) {
+            $this->contextLines = 0;
         }
     }
 
@@ -60,5 +68,15 @@ class ConfigModel
     public function setExportDriver(?string $exportDriver): void
     {
         $this->exportDriver = $exportDriver;
+    }
+
+    public function getContextLines(): ?int
+    {
+        return $this->contextLines;
+    }
+
+    public function setContextLines(?int $contextLines): void
+    {
+        $this->contextLines = $contextLines;
     }
 }
