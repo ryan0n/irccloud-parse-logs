@@ -38,7 +38,7 @@ class ConfigModel
             }
         }
         if (empty($this->exportDriver)) {
-            $this->exportDriver = 'genericoutput';
+            $this->exportDriver = 'rawoutputoneline';
         }
     }
 

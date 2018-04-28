@@ -7,9 +7,10 @@ ini_set("memory_limit", "8G");
 use ryan0n\IrcCloudParseLogs\Exception\ExportDriverNotFoundException;
 use ryan0n\IrcCloudParseLogs\Exception\UnparsableZipFileException;
 use ryan0n\IrcCloudParseLogs\ExportDriver\ExportDriverInterface;
-use ryan0n\IrcCloudParseLogs\ExportDriver\GenericOutput;
+use ryan0n\IrcCloudParseLogs\ExportDriver\RawOutput;
 use ryan0n\IrcCloudParseLogs\ExportDriver\Json;
 use ryan0n\IrcCloudParseLogs\ExportDriver\MySQL;
+use ryan0n\IrcCloudParseLogs\ExportDriver\RawOutputOneLine;
 use ryan0n\IrcCloudParseLogs\Model\ConfigModel;
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 use ZipArchive;
@@ -50,8 +51,11 @@ class IrcCloudParseLogs
     private function exportDriverFactory(string $type): ExportDriverInterface
     {
         switch ($type) {
-            case 'genericoutput':
-                return new GenericOutput();
+            case 'rawoutput':
+                return new RawOutput();
+                break;
+            case 'rawoutputoneline':
+                return new RawOutputOneLine();
                 break;
             case 'json';
                 return new Json();

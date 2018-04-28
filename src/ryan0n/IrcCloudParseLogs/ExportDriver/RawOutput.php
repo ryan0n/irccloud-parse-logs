@@ -4,7 +4,7 @@ namespace ryan0n\IrcCloudParseLogs\ExportDriver;
 
 use ryan0n\IrcCloudParseLogs\Model\LogLineModel;
 
-class GenericOutput implements ExportDriverInterface
+class RawOutput implements ExportDriverInterface
 {
     public function export(LogLineModel $logLine) : bool
     {
