@@ -74,7 +74,7 @@ class IrcCloudParseLogs
      */
     public function run(): void
     {
-        $originalZipSize = $this->getZipOriginalSize($this->configModel->getZipFile());
+        $uncompressedZipSizeTotal = $this->getZipOriginalSize($this->configModel->getZipFile());
 
         $zip = new ZipArchive;
         $zip->open($this->configModel->getZipFile());
@@ -104,14 +104,14 @@ class IrcCloudParseLogs
 
             if (!$shouldProcessFile) {
                 $this->uncompressedZizSizeProgress += mb_strlen($contents, '8bit');
-                $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
+                $this->showStatus($this->uncompressedZizSizeProgress, $uncompressedZipSizeTotal);
             } else {
                 $rawLine = strtok($contents, "\n");
                 while ($rawLine !== false) {
 
                     $this->uncompressedZizSizeProgress += mb_strlen($rawLine, '8bit');
                     if ($logLineCurrent % 30000 === 0) {
-                        $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
+                        $this->showStatus($this->uncompressedZizSizeProgress, $uncompressedZipSizeTotal);
                     }
 
                     $logLineCurrent++;
@@ -157,7 +157,10 @@ class IrcCloudParseLogs
                             if (null === $this->configModel->getDate()) {
                                 $this->exportDriver->export($logLineModel);
                             } else {
-                                if ($this->configModel->getDate() === $logLineModel->getDateTime()->format('Y-m-d')) {
+                                if (strpos(
+                                    $logLineModel->getDateTime()->format('Y-m-d'),
+                                    $this->configModel->getDate()) !== false
+                                ) {
                                     $this->exportDriver->export($logLineModel);
                                 }
                             }
@@ -235,16 +238,14 @@ class IrcCloudParseLogs
 
     private function getZipOriginalSize(string $filename): int
     {
-        if (empty($this->uncompressedZipSizeTotal)) {
-            $size = 0;
-            $resource = zip_open($filename);
-            while ($dir_resource = zip_read($resource)) {
-                $size += zip_entry_filesize($dir_resource);
-            }
-            zip_close($resource);
-            $this->uncompressedZipSizeTotal = $size;
+        $size = 0;
+        $resource = zip_open($filename);
+        while ($dir_resource = zip_read($resource)) {
+            $size += zip_entry_filesize($dir_resource);
         }
-        return $this->uncompressedZipSizeTotal;
+        zip_close($resource);
+
+        return $size;
     }
 
     protected function showStatus($done, $total, $size=30) {
