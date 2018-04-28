@@ -79,8 +79,9 @@ class IrcCloudParseLogs
             throw new UnparsableZipFileException('Unexpected zip file structure.');
         }
 
-        $logLineCount = 0;
+        $logLineCurrent = 0;
         $logLineModelsQueue = [];
+        $logLineBeginExport = null;
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
             if (substr_count($filename, '/') !== 2) {
@@ -105,18 +106,17 @@ class IrcCloudParseLogs
                 while ($rawLine !== false) {
 
                     $this->uncompressedZizSizeProgress += mb_strlen($rawLine, '8bit');
-                    if ($logLineCount % 30000 === 0) {
+                    if ($logLineCurrent % 30000 === 0) {
                         $this->showStatus($this->uncompressedZizSizeProgress, $this->uncompressedZipSizeTotal);
                     }
 
-                    $shouldProcessLine = false;
-                    $logLineCount++;
+                    $logLineCurrent++;
 
                     if (null !== $this->configModel->getContextLines()) {
                         $logLineModel = new LogLineModel();
                         $logLineModel->setFileName($filename);
                         $logLineModel->setRawLine($rawLine);
-                        $logLineModel->setLineNumber($logLineCount);
+                        $logLineModel->setLineNumber($logLineCurrent);
                         $logLineModelsQueue[] = $logLineModel;
 
                         $sliceBegin = \count($logLineModelsQueue) - $this->configModel->getContextLines();
@@ -129,36 +129,38 @@ class IrcCloudParseLogs
 
                     if (!$this->configModel->getSearchPhrase()) {
                         // Not in search mode. Processing all lines.
-                        $shouldProcessLine = true;
+                        $logLineBeginExport = $logLineCurrent;
                     } elseif (false !== strpos($rawLine, $this->configModel->getSearchPhrase())) {
                         // In search mode. Boost performance by not processing lines that don't contain search phrase.
-                        $shouldProcessLine = true;
+                        if ($this->configModel->getContextLines()) {
+                            if (null === $logLineBeginExport) {
+                                $logLineBeginExport = $logLineCurrent + (int) ceil($this->configModel->getContextLines() / 2);
+                            }
+                        } else {
+                            $logLineBeginExport = $logLineCurrent;
+                        }
                     }
 
-                    if ($shouldProcessLine) {
+                    if ($logLineCurrent === $logLineBeginExport) {
                         $logLineModel = new LogLineModel();
                         $logLineModel->setFileName($filename);
                         $logLineModel->setRawLine($rawLine);
-                        $logLineModel->setLineNumber($logLineCount);
-
+                        $logLineModel->setLineNumber($logLineCurrent);
                         $logLineModelsQueue[] = $logLineModel;
 
                         foreach ($logLineModelsQueue as $logLineModel) {
                             $logLineModel = $this->populateLogLineModel($logLineModel);
-
                             if (null === $this->configModel->getDate()) {
-
                                 $this->exportDriver->export($logLineModel);
-
                             } else {
                                 if ($this->configModel->getDate() === $logLineModel->getDateTime()->format('Y-m-d')) {
                                     $this->exportDriver->export($logLineModel);
                                 }
-
                             }
                         }
-                        $logLineModelsQueue = [];
 
+                        $logLineBeginExport = null;
+                        $logLineModelsQueue = [];
                     }
                     $rawLine = strtok("\n");
                 }
@@ -175,7 +177,7 @@ class IrcCloudParseLogs
 
         // set the network
         $network = explode('/', $logLineModel->getFileName())[1];
-        $network = substr($network, strpos($network, '-') + 1, strlen($network));
+        $network = substr($network, strpos($network, '-') + 1, \strlen($network));
         $logLineModel->setNetwork($network);
 
         // set the channel
@@ -185,7 +187,12 @@ class IrcCloudParseLogs
 
         // set the date
         $line = explode(' ', $logLineModel->getRawLine());
-        $logLineModel->setDateTime(new \DateTime(substr($line[0] . ' ' . $line[1], 1, -1)));
+        try {
+            $logLineModel->setDateTime(new \DateTime(substr($line[0] . ' ' . $line[1], 1, -1)));
+        } catch (\Throwable $e) {
+            $logLineModel->setDateTime(new \DateTime());
+            return $logLineModel;
+        }
         unset($line[0], $line[1]);
 
         // set the rest
